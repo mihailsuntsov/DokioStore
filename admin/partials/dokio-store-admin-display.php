@@ -85,11 +85,63 @@
             <div class="progress">
                 <div id="progress" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><span id="precent_text"></span></div>
             </div>
-            <form action="http://localhost/DokioShop/wp-admin/admin-post.php" method="post">
+            <!-- <form action="http://localhost/DokioShop/wp-admin/admin-post.php" method="post">
                 <input type="hidden" name="action" value="c_get_crm_tax_rates">
                 <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                <input type="submit" value="Submit">
-            </form>
+                <input type="submit" value="Get DokioCRM tax rates">
+            </form> -->
+            
+
+            <table class="table table-bordered" style="margin-top: 30px; text-" >
+                <thead>
+                    <tr>
+                        <th colspan=3 style = "text-align: center;"><h3>Synchronization tasks</h3></th>
+                    </tr>
+                </thead>
+                <tbody style = "font-size: 24px;">
+                    <tr>
+                        <td class="col-1" style = "text-align: center;">
+                            <div style="width: 24px;
+                                height: 24px;
+                                margin: 12px auto;
+                                border-radius: 12px;
+                                background: 
+                                <?php echo(task_works('dokiocrm_taxes_cronjob')?'green':'red');?>;">
+                            </div>
+                        </td>
+                        <td><span style = "line-height: 47px;">Taxes</span></td>
+                        <td class="col-2" style = "text-align: center;">
+                            <form 
+                            style = "display:<?php echo(task_works('dokiocrm_taxes_cronjob')?'none':'block');?>"
+                                action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                                method="post">
+                                <input type="hidden" name="action" value="turn_on_cron_taxes">
+                                <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
+                                <button type="submit" class="btn btn-light btn-lg">Start</button>
+                                <!-- <input type="submit" value="Start"> -->
+                            </form>
+                            <form 
+                                style = "display:<?php echo(task_works('dokiocrm_taxes_cronjob')?'block':'none');?>"
+                                action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                                method="post">
+                                <input type="hidden" name="action" value="turn_off_cron_taxes">
+                                <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
+                                <button type="submit" class="btn btn-light btn-lg">Stop</button>
+                                <!-- <input type="submit" value="Stop"> -->
+                            </form>    
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+                            <form 
+                                action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                                method="post">
+                                <input type="hidden" name="action" value="c_get_crm_categories">
+                                <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
+                                <button type="submit" class="btn btn-light btn-lg">Categories</button>
+                                <!-- <input type="submit" value="Stop"> -->
+                            </form> 
+
             <!-- <form method="post" action="c_get_crm_tax_rates">
                 <button type="submit" class="btn btn-primary">get_crm_tax_rates</button>
             </form> -->

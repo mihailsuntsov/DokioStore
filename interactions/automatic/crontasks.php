@@ -1,44 +1,48 @@
 <?php
-add_action('my_hourly_event', 'do_this_hourly');
 
-// The action will trigger when someone visits your WordPress site
-function my_activation() {
-    if ( !wp_next_scheduled( 'my_hourly_event' ) ) {
-        wp_schedule_event( time(), 'hourly', 'my_hourly_event');
+    add_action('dokiocrm_taxes_cronjob', 'c_cron_taxes');
+    add_action("admin_post_turn_off_cron_taxes", "turn_off_cron_taxes"); 
+
+    add_action('admin_post_turn_on_cron_taxes', 'turn_on_cron_taxes');
+    function turn_on_cron_taxes() {
+        logger('--- Taxes cronjob running ---');
+        try {
+            logger('INFO--taxes/turn_on_cron_taxes-- Trying to run cronjob dokiocrm_taxes_cronjob...');
+            if ( !task_works( 'dokiocrm_taxes_cronjob' ) ) {
+                wp_schedule_event( time(), 'hourly', 'dokiocrm_taxes_cronjob');
+                logger('INFO--taxes/turn_on_cron_taxes-- The cronjob dokiocrm_taxes_cronjob works');
+            } else {
+                logger('INFO--taxes/turn_on_cron_taxes-- The cronjob dokiocrm_taxes_cronjob is already working');
+            }
+        } catch (Exception $e) {
+            echo 'ERROR--taxes/turn_on_cron_taxes-- Exception: ',  $e->getMessage(), "\n";
+            logger ('ERROR--taxes/turn_on_cron_taxes-- The response: '.$e->getMessage());
+        }
+        wp_redirect($_POST['backpage'],302 ); 
     }
-}
-add_action('wp', 'my_activation');
 
-function do_this_hourly() {
-    // do something every hour
-    echo(111);
-}
+    function turn_off_cron_taxes() {
+        logger('--- Taxes cronjob deleting ---');
+        logger('INFO--taxes/admin_post_turn_off_cron_taxes-- Trying to delete cronjob dokiocrm_taxes_cronjob...');
+        try {
+            wp_clear_scheduled_hook("dokiocrm_taxes_cronjob"); 
+            logger('INFO--taxes/admin_post_turn_off_cron_taxes-- The cronjob dokiocrm_taxes_cronjob deleted successfully');
+        } catch (Exception $e) {
+            echo 'ERROR--taxes/admin_post_turn_off_cron_taxes-- Exception: ',  $e->getMessage(), "\n";
+            logger ('ERROR--taxes/admin_post_turn_off_cron_taxes-- The response: '.$e->getMessage());
+        }
+        wp_redirect($_POST['backpage'],302 ); 
+    } 
 
+    function c_cron_taxes() {
+        // do something every hour
+        echo(111);
+        c_get_crm_tax_rates();
+    }
 
+    function task_works($name){
+        if ( wp_next_scheduled($name) ) {
+            return true;
+        } else return false;
+    }
 
-
-// initiate the curl request
-// $request = curl_init();
-
-// curl_setopt($request, CURLOPT_URL,"http://localhost:8080/api/public/woo_v3/");
-// curl_setopt($request, CURLOPT_POST, 1);
-// curl_setopt($request, CURLOPT_POSTFIELDS,
-//         "var1=value1&var2=value2");
-
-// catch the response
-// curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-
-// $response = curl_exec($request);
-
-// curl_close ($request);
-
-// do processing for the $response
-
-
-// $url = 'http://localhost:8080/api/public/woo_v3/syncTaxesToStore?key='.get_option( 'secret_key' );
-// $request = curl_init($url); 
-// curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-// curl_setopt($request, CURLOPT_HEADER, 0);
-// $data = curl_exec($request);
-// curl_close($request);
-// echo('<br><br><br>'.$data);

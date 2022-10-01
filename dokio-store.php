@@ -111,13 +111,18 @@ require plugin_dir_path( __FILE__ ) . '/interactions/automatic/crontasks.php';
 
 
  require plugin_dir_path( __FILE__ ) . '/interactions/taxes.php';
+ require plugin_dir_path( __FILE__ ) . '/interactions/c_taxes.php';
+ require plugin_dir_path( __FILE__ ) . '/interactions/c_categories.php';
  require plugin_dir_path( __FILE__ ) . '/interactions/ajax/ajax.php';
- require plugin_dir_path( __FILE__ ) . '/interactions/test.php';
  require plugin_dir_path( __FILE__ ) . '/logger/logger.php';
 
 
 
-
+ function github16702_allow_unsafe_urls($args, $url) {
+    $args['reject_unsafe_urls'] = false;
+    return $args;
+}
+add_filter('http_request_args', 'github16702_allow_unsafe_urls', 20, 2 );
 
 
 /**
