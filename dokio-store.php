@@ -113,6 +113,7 @@ require plugin_dir_path( __FILE__ ) . '/interactions/automatic/crontasks.php';
  require plugin_dir_path( __FILE__ ) . '/interactions/taxes.php';
  require plugin_dir_path( __FILE__ ) . '/interactions/c_taxes.php';
  require plugin_dir_path( __FILE__ ) . '/interactions/c_categories.php';
+ require plugin_dir_path( __FILE__ ) . '/interactions/c_attributes.php';
  require plugin_dir_path( __FILE__ ) . '/interactions/ajax/ajax.php';
  require plugin_dir_path( __FILE__ ) . '/logger/logger.php';
 

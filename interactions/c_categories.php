@@ -6,6 +6,7 @@
     use Automattic\WooCommerce\HttpClient\HttpClientException;
 
     add_action( 'admin_post_c_get_crm_categories', 'c_get_crm_categories' );
+
     function c_get_crm_categories() {
         logger('--- Categories auto sync ---');
         try {
@@ -48,7 +49,7 @@
                 //Getting all WooCommerce categories to get the array of all their IDs
                 logger('INFO--categories/c_get_crm_categories-- Getting all WooCommerce categories to get the array of all their IDs');
                 $all_woo_categories = $woocommerce->get('products/categories', ['per_page' => $per_page]);
-                if(count($all_woo_categories)==$per_page){// 100 per page is max number in WoCommerce, but may be this is not all categories
+                if(count($all_woo_categories)==$per_page){// 100 per page is max number in WooCommerce, but may be this is not all categories
                     echo('this is not all categories<br>');
                     $page=2;
                     $do_cycle=true;
