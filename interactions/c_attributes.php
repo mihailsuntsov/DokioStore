@@ -65,7 +65,7 @@
 
 
 
-                        //Getting all WooCommerce c_get_crm_attributes to get the array of all their IDs
+                        //Getting all WooCommerce attributes to get the array of all their IDs
                         logger('INFO--attributes/c_get_crm_attributes-- Getting all WooCommerce attributes to get the array of all their IDs');
                         $all_woo_attributes = $woocommerce->get('products/attributes');
                         $was_query_all_store_attributes = true;
@@ -96,6 +96,7 @@
                         foreach ($all_woo_ids as $curr_woo_id ) {
                             if (!in_array($curr_woo_id, $all_crm_woo_ids)){
                                 echo('<br>Trying to delete attribute with woo_id = '.$curr_woo_id.'<br>');
+                                logger('INFO--attributes/c_get_crm_attributes-- Trying to delete attribute with woo_id = '.$curr_woo_id);
                                 print_r($woocommerce->delete('products/attributes/'.$curr_woo_id, ['force' => true]));
                             }
                         }

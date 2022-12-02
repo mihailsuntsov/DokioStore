@@ -149,6 +149,14 @@
                                 <button type="submit" class="btn btn-light btn-lg">Attributes</button>
                                 <!-- <input type="submit" value="Stop"> -->
                             </form>
+                            <form 
+                                action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                                method="post">
+                                <input type="hidden" name="action" value="c_get_crm_terms">
+                                <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
+                                <button type="submit" class="btn btn-light btn-lg">Terms</button>
+                                <!-- <input type="submit" value="Stop"> -->
+                            </form>
 
             <!-- <form method="post" action="c_get_crm_tax_rates">
                 <button type="submit" class="btn btn-primary">get_crm_tax_rates</button>
