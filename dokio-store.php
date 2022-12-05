@@ -115,6 +115,7 @@ require plugin_dir_path( __FILE__ ) . '/interactions/automatic/crontasks.php';
  require plugin_dir_path( __FILE__ ) . '/interactions/c_categories.php';
  require plugin_dir_path( __FILE__ ) . '/interactions/c_attributes.php';
  require plugin_dir_path( __FILE__ ) . '/interactions/c_terms.php';
+ require plugin_dir_path( __FILE__ ) . '/interactions/c_products.php';
  require plugin_dir_path( __FILE__ ) . '/interactions/ajax/ajax.php';
  require plugin_dir_path( __FILE__ ) . '/logger/logger.php';
 
