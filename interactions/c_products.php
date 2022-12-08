@@ -9,17 +9,20 @@
         logger('--- Products auto sync ---');
         try {
             status_header(200);
-            $woocommerce = new Client(get_option('woo_address'),get_option('woo_consumer_key'),get_option('woo_consumer_secret'),['version' => 'wc/v3']);
+            $woocommerce = new Client(get_option('woo_address'),get_option('woo_consumer_key'),get_option('woo_consumer_secret'),['version' => 'wc/v3','timeout' => 240]);
+            
             $url = 'http://localhost:8080/api/public/woo_v3/countProductsToStoreSync?key='.get_option( 'secret_key' );
             echo $url;
             $request = curl_init($url); 
             curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($request, CURLOPT_HEADER, 0);
+            curl_setopt($request, CURLOPT_TIMEOUT,500); // 500 seconds
+            curl_setopt($request, CURLOPT_FOLLOWLOCATION, false);
             logger('INFO--products/c_get_crm_products-- Getting the list of products from CRM');
             $data = curl_exec($request);
             $httpcode = curl_getinfo($request, CURLINFO_HTTP_CODE);
             curl_close($request);
-
+            $all_woo_products_ids = wc_get_products( array( 'return' => 'ids', 'limit' => -1 ) ); // array of all woo products ID's
             if($httpcode==200){
                 echo('<br><b>Received data: </b><br>'. $data . '<br>');
                 logger('INFO--products/c_get_crm_products-- Received data: '. $data );
@@ -34,7 +37,7 @@
                     $firstResult = 0;
                     $maxResults  = 100;
                     $ids_pairs = array(); //the array of pairs woo_id and crm_id that will be sent to CRM for update woo_id's
-                    $all_woo_products_ids = wc_get_products( array( 'return' => 'ids', 'limit' => -1 ) ); // array of all woo products ID's
+                    
                     $totalNumOfQueryCycles = ceil($productsQuantity/$maxResults);
                     echo('<b>Total number of query cycles: </b>'. $totalNumOfQueryCycles . '<br>');
                     logger('INFO--products/c_get_crm_products-- Total number of query cycles: ' . $totalNumOfQueryCycles);
@@ -44,15 +47,13 @@
                         echo('<b>Current cycle: </b>'. $currentCycle . '<br> $firstResult: ' . $firstResult . '<br> $maxResults: ' . $maxResults. '<br>');
                         logger('INFO--products/c_get_crm_products-- Current cycle: ' . $currentCycle);
 
-
-
-
-
-                        $woocommerce = new Client(get_option('woo_address'),get_option('woo_consumer_key'),get_option('woo_consumer_secret'),['version' => 'wc/v3']);
+                        // $woocommerce = new Client(get_option('woo_address'),get_option('woo_consumer_key'),get_option('woo_consumer_secret'),['version' => 'wc/v3']);
                         $url = 'http://localhost:8080/api/public/woo_v3/syncProductsToStore?key='.get_option( 'secret_key' ).'&first_result='.$firstResult.'&max_results='.$maxResults;
                         $request = curl_init($url); 
                         curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
                         curl_setopt($request, CURLOPT_HEADER, 0);
+                        curl_setopt($request, CURLOPT_TIMEOUT,500); // 500 seconds
+                        curl_setopt($request, CURLOPT_FOLLOWLOCATION, false);
                         logger('INFO--products/c_get_crm_products-- Getting the list of products from CRM');
                         $data = curl_exec($request);
                         $httpcode = curl_getinfo($request, CURLINFO_HTTP_CODE);
@@ -77,13 +78,15 @@
                                 print_r ($crm_product->name);
                                 echo('<br>');
                                 $currentProductImagesArray = formImagesArray($crm_product->images);
+                                $currentProductCategoriesArray = formCategoriesArray($crm_product->categories);
                                 $currentProductObject = array(
                                     'name' => $crm_product->name, 
                                     'type' => $crm_product->type, 
                                     'regular_price' => $crm_product->regular_price, 
                                     'sale_price' => $crm_product->sale_price, 
                                     'description' => $crm_product->description, 
-                                    'short_description' => $crm_product->short_description
+                                    'short_description' => $crm_product->short_description,
+                                    'categories' => $currentProductCategoriesArray
                                 );
                                 if($crm_product->woo_id == NULL) {
                                     echo '$crm_product->woo_id is null<br>';
@@ -125,18 +128,13 @@
                                     }
                                 }
                             }
-
-
-
                         } else {
                             echo '<b>Server error with response code = '.$httpcode.' Synchronization failed!</b><br>';
                             logger ('ERROR--products/c_get_crm_products-- Server error with response code = '.$httpcode.', Response = '.$response.' Synchronization failed!');
                         }
-
                         $firstResult = $firstResult + $maxResults;
                         $currentCycle++;
                     }
-
 
                     // Sending ID's of all created in WooCommerce products to the CRM for IDs synchronization  
                     echo ('<b>ids_pairs:</b><br>');
@@ -144,7 +142,7 @@
                         echo 'woo_id = ' . $pair->id . ', crm_id = ' . $pair->crm_id.'<br>';
                     }
                     if(count($ids_pairs) >0 ){
-                        echo '<b>Sending POST request to the CRM server:</b><br>';
+                        echo '<b>Sending synchronization set of ID\'s to the CRM server:</b><br>';
                         $data_to_sent = '{"crmSecretKey":"'.get_option( 'secret_key' ).'","idsSet":'.json_encode($ids_pairs).'}';
                         logger ('INFO--products/c_get_crm_products-- Sending POST request syncProductsIds to the CRM server with data: '.$data_to_sent);
                         $url = 'http://localhost:8080/api/public/woo_v3/syncProductsIds';
@@ -153,33 +151,100 @@
                         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
                         curl_setopt($curl, CURLOPT_POSTFIELDS, $data_to_sent);
                         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+                        curl_setopt($curl, CURLOPT_TIMEOUT,500); // 500 seconds
+                        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
                         $response = curl_exec($curl);
                         curl_close($curl);
-                        echo '<pre>1-<br>';
+                        echo '<pre>The response of syncProductsIds: ';
                         print_r ($response);
-                        echo '<br>-1</pre>'; 
-                        logger ('INFO--products/c_get_crm_products-- The response: '.$response);
+                        echo '<br></pre>';
+                        switch ($response) {
+                            case NULL:
+                                logger ('ERROR--products/c_get_crm_products/syncProductsIds: Error of the Sending synchronization set of ID\'s to the CRM server!:Response: <br>'.$response); 
+                                break;
+                            case 1:
+                                logger ('INFO--products/c_get_crm_products/syncProductsIds: Success! Response: <br>'.$response);
+                                break;
+                            case -200:
+                                logger ('ERROR--products/c_get_crm_products/syncProductsIds: Error of the Sending synchronization set of ID\'s to the CRM server!: WrongCrmSecretKeyException. Response: <br>'.$response);
+                                break;
+                        }    
                     }
-
-
-
                 } else {
                     echo '<b>Total products from DokioCRM to be synchronized is 0</b><br>';
                     logger ('WARN--products/c_get_crm_products-- Total products from DokioCRM to be synchronized is 0. DokioCRM hasn\'t non-deleted products');
                 }
-
-
-
-
-
-
-
             } else {
                 echo '<b>Server error with response code = '.$httpcode.' Synchronization failed!</b><br>';
                 logger ('ERROR--products/c_get_crm_products-- Server error with response code = '.$httpcode.', Response = '.$response.' Synchronization failed!');
             }
 
-        }  catch (HttpClientException $e) {
+            // Querying woo_ID's of products that need to be deleted on the store side
+            // It can be 1) Deleted on the CRM side products 2) Products than no more belong to store categories
+            $url = 'http://localhost:8080/api/public/woo_v3/getProductWooIdsToDeleteInStore?key='.get_option( 'secret_key' );
+            echo $url;
+            $request = curl_init($url); 
+            curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($request, CURLOPT_HEADER, 0);
+            curl_setopt($request, CURLOPT_TIMEOUT,500); // 500 seconds
+            curl_setopt($request, CURLOPT_FOLLOWLOCATION, false);
+            echo('<br>Getting the list of products woo_ID\'s from CRM, that need to be deleted on the store side<br>');
+            logger('INFO--products/c_get_crm_products-- Getting the list of products woo_ID\'s from CRM, that need to be deleted on the store side');
+            $data = curl_exec($request);
+            $httpcode = curl_getinfo($request, CURLINFO_HTTP_CODE);
+            curl_close($request);
+
+            if($httpcode==200){
+                echo('<br><b>Received data: </b><br>'. $data . '<br>');
+                logger('INFO--products/c_get_crm_products-- Received data: '. $data );
+                $array = json_decode($data);
+                if(count($array) >0 ){
+                    foreach ($array as $crm_woo_id ) {
+                        echo('<b>Current crm_woo_id: </b>'.$crm_woo_id.'<br>');
+                        if (in_array($crm_woo_id, $all_woo_products_ids)) {
+                            echo('<br>Trying to delete the product with woo_id = '.$crm_woo_id . '<br>');
+                            logger('INFO--products/c_get_crm_products-- Trying to delete the product with woo_id = '.$crm_woo_id);
+                            $woocommerce->delete('products/'.$crm_woo_id, ['force' => true]);
+                        }
+                    }
+                    //Clearing woo_ID's on the server side by sending the set of deleted woo_ID's to the CRM server
+                    echo '<b>Clearing woo_ID\'s on the server side by sending the set of deleted woo_ID\'s to the CRM server</b><br>';
+                    $data_to_sent = '{"crmSecretKey":"'.get_option( 'secret_key' ).'","idsSet":'.json_encode($array).'}';
+                    logger ('INFO--products/c_get_crm_products-- Clearing woo_ID\'s on the server side by sending the POST request with the set of deleted woo_ID\'s to the CRM server with data: '.$data_to_sent);
+                    $url = 'http://localhost:8080/api/public/woo_v3/deleteWooIdsFromProducts';
+                    $curl = curl_init($url);
+                    curl_setopt($curl, CURLOPT_POST, true);
+                    curl_setopt($curl, CURLOPT_TIMEOUT,500); // 500 seconds
+                    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
+                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data_to_sent);
+                    curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+                    $response = curl_exec($curl);
+                    curl_close($curl);
+                    echo '<pre>The response of deleteWooIdsFromProducts: ';
+                    print_r ($response);
+                    echo '<br></pre>';
+                    switch ($response) {
+                        case NULL:
+                            logger ('ERROR--products/c_get_crm_products/deleteWooIdsFromProducts: Error of the deleting woo_ids on the server side!: Response: <br>'.$response);
+                            break;
+                        case 1:
+                            logger ('INFO--products/c_get_crm_products/deleteWooIdsFromProducts: Success! Response: <br>'.$response);
+                            break;
+                        case -200:
+                            logger ('ERROR--products/c_get_crm_products/deleteWooIdsFromProducts: Error of the deleting woo_ids on the server side!: WrongCrmSecretKeyException. Response: <br>'.$response);
+                            break;
+                    }                     
+                } else {
+                    echo('<br>Nothing to delete on the store side.<br>');
+                    logger('INFO--products/c_get_crm_products-- Nothing to delete on the store side');
+                }
+            } else {
+                echo '<b>Server error of request getProductWooIdsToDeleteInStore with response code = '.$httpcode.' Synchronization failed!</b><br>';
+                logger ('ERROR--products/c_get_crm_products-- Server error of request getProductWooIdsToDeleteInStore with response code = '.$httpcode.', Response = '.$response.' Synchronization failed!');
+            }
+
+        } catch (HttpClientException $e) {
             echo '<pre><code>' . print_r($e->getMessage(), true) . '</code><pre>'; // Error message.
             echo '<pre><code>' . print_r($e->getRequest(), true) . '</code><pre>'; // Last request data.
             echo '<pre><code>' . print_r($e->getResponse(), true) . '</code><pre>'; // Last response data.
@@ -206,7 +271,17 @@
         }
         return $imageArray;
     }
-
+    function formCategoriesArray($arr){      
+        $categoriesArray=[];
+        echo 'categories Array: \n';
+        Print_r($arr);
+        foreach ($arr as $e ) {
+            array_push($categoriesArray,[
+                'id'   => $e
+            ]);
+        }
+        return $categoriesArray;
+    }
     function needToUpdateImages($dokioImages, $wooImages){
         $need = false;
 
