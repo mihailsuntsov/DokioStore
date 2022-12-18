@@ -18,7 +18,7 @@
             curl_setopt($request, CURLOPT_HEADER, 0);
             curl_setopt($request, CURLOPT_TIMEOUT,500); // 500 seconds
             curl_setopt($request, CURLOPT_FOLLOWLOCATION, false);
-            logger('INFO--products/c_get_crm_products-- Getting the list of products from CRM');
+            logger('INFO--products/c_get_crm_products-- Getting the number of products to synchronize from CRM');
             $data = curl_exec($request);
             $httpcode = curl_getinfo($request, CURLINFO_HTTP_CODE);
             curl_close($request);
@@ -77,8 +77,9 @@
                                 echo('<b>Current product name: </b><br>');
                                 print_r ($crm_product->name);
                                 echo('<br>');
-                                $currentProductImagesArray = formImagesArray($crm_product->images);
-                                $currentProductCategoriesArray = formCategoriesArray($crm_product->categories);
+                                $currentProductImagesArray     =    formImagesArray     ($crm_product->images);
+                                $currentProductCategoriesArray =    formCategoriesArray ($crm_product->categories);
+                                $currentProductAttributesArray =    formAttributesArray ($crm_product->attributes);
                                 $currentProductObject = array(
                                     'name' => $crm_product->name, 
                                     'type' => $crm_product->type, 
@@ -86,7 +87,17 @@
                                     'sale_price' => $crm_product->sale_price, 
                                     'description' => $crm_product->description, 
                                     'short_description' => $crm_product->short_description,
-                                    'categories' => $currentProductCategoriesArray
+                                    'categories' => $currentProductCategoriesArray,
+                                    'attributes' =>$currentProductAttributesArray,
+                                    'stock_status' => $crm_product->stock_status, 
+                                    'sku' => $crm_product->sku, 
+                                    'stock_quantity' => $crm_product->stock_quantity, 
+                                    'sold_individually' => $crm_product->sold_individually, 
+                                    'manage_stock' => $crm_product->manage_stock, 
+                                    'backorders' => $crm_product->backorders, 
+                                    'purchase_note' => $crm_product->purchase_note, 
+                                    'menu_order' => $crm_product->menu_order, 
+                                    'reviews_allowed' => $crm_product->reviews_allowed 
                                 );
                                 if($crm_product->woo_id == NULL) {
                                     echo '$crm_product->woo_id is null<br>';
@@ -112,8 +123,10 @@
 
                                         // Updating this product
                                         echo('<b>Updating product</b> with crm_id = '.$crm_product->crm_id.', woo_id = '.$crm_product->woo_id.', name = '. $crm_product->name.', slug = '.$crm_product->slug.', description = '.$crm_product->description.', menu_order = '.$crm_product->menu_order.'<br>');
+                                        echo('<b>Changed product: </b><br><pre>');
+                                        print_r ($woocommerce->put('products/'.$crm_product->woo_id, (object)$currentProductObject));
+                                        echo('</pre><br>');
                                         
-                                        $woocommerce->put('products/'.$crm_product->woo_id, (object)$currentProductObject); 
                                         array_push($ids_pairs, (object) ['id'=>$crm_product->woo_id, 'crm_id'=>$crm_product->crm_id]);
                                     } else { //if the product was removed manually, i.e. all_woo_products_ids[] does not contain woo's id receqved from CRM
                                         logger('INFO--products/c_get_crm_products-- The product with woo_id = '.$crm_product->woo_id.' is not in WooCommerce, it was removed manually.');
@@ -160,13 +173,13 @@
                         echo '<br></pre>';
                         switch ($response) {
                             case NULL:
-                                logger ('ERROR--products/c_get_crm_products/syncProductsIds: Error of the Sending synchronization set of ID\'s to the CRM server!:Response: <br>'.$response); 
+                                logger ('ERROR--products/c_get_crm_products/syncProductsIds: Error of the Sending synchronization set of ID\'s to the CRM server!:Response: '.$response); 
                                 break;
-                            case 1:
-                                logger ('INFO--products/c_get_crm_products/syncProductsIds: Success! Response: <br>'.$response);
+                            case '1':
+                                logger ('INFO--products/c_get_crm_products/syncProductsIds: Success! Response: '.$response);
                                 break;
-                            case -200:
-                                logger ('ERROR--products/c_get_crm_products/syncProductsIds: Error of the Sending synchronization set of ID\'s to the CRM server!: WrongCrmSecretKeyException. Response: <br>'.$response);
+                            case '-200':
+                                logger ('ERROR--products/c_get_crm_products/syncProductsIds: Error of the Sending synchronization set of ID\'s to the CRM server!: WrongCrmSecretKeyException. Response: '.$response);
                                 break;
                         }    
                     }
@@ -226,13 +239,13 @@
                     echo '<br></pre>';
                     switch ($response) {
                         case NULL:
-                            logger ('ERROR--products/c_get_crm_products/deleteWooIdsFromProducts: Error of the deleting woo_ids on the server side!: Response: <br>'.$response);
+                            logger ('ERROR--products/c_get_crm_products/deleteWooIdsFromProducts: Error of the deleting woo_ids on the server side!: Response: '.$response);
                             break;
-                        case 1:
-                            logger ('INFO--products/c_get_crm_products/deleteWooIdsFromProducts: Success! Response: <br>'.$response);
+                        case '1':
+                            logger ('INFO--products/c_get_crm_products/deleteWooIdsFromProducts: Success! Response: '.$response);
                             break;
-                        case -200:
-                            logger ('ERROR--products/c_get_crm_products/deleteWooIdsFromProducts: Error of the deleting woo_ids on the server side!: WrongCrmSecretKeyException. Response: <br>'.$response);
+                        case '-200':
+                            logger ('ERROR--products/c_get_crm_products/deleteWooIdsFromProducts: Error of the deleting woo_ids on the server side!: WrongCrmSecretKeyException. Response: '.$response);
                             break;
                     }                     
                 } else {
@@ -281,6 +294,21 @@
             ]);
         }
         return $categoriesArray;
+    }
+    function formAttributesArray($arr){      
+        $attributesArray=[];
+        echo 'Attributes Array: \n';
+        Print_r($arr);
+        foreach ($arr as $e ) {
+            array_push($attributesArray,[
+                'id' => $e->woo_id,
+                'position' => $e->position,
+                'visible' => $e->visible,
+                'variation' => $e->variation,
+                'options' =>     $e->options
+            ]);
+        }
+        return $attributesArray;
     }
     function needToUpdateImages($dokioImages, $wooImages){
         $need = false;

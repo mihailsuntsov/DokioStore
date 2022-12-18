@@ -35,10 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'DOKIO_STORE_VERSION', '1.0.0' );
-
-
-
+define( 'DOKIO_STORE_VERSION', '1.1.0' );
 
 
 // echo json_encode($woocommerce->get('orders'));
@@ -114,6 +111,7 @@ require plugin_dir_path( __FILE__ ) . '/interactions/automatic/crontasks.php';
  require plugin_dir_path( __FILE__ ) . '/interactions/c_taxes.php';
  require plugin_dir_path( __FILE__ ) . '/interactions/c_categories.php';
  require plugin_dir_path( __FILE__ ) . '/interactions/c_attributes.php';
+ require plugin_dir_path( __FILE__ ) . '/interactions/c_orders.php';
  require plugin_dir_path( __FILE__ ) . '/interactions/c_terms.php';
  require plugin_dir_path( __FILE__ ) . '/interactions/c_products.php';
  require plugin_dir_path( __FILE__ ) . '/interactions/ajax/ajax.php';
@@ -126,6 +124,19 @@ require plugin_dir_path( __FILE__ ) . '/interactions/automatic/crontasks.php';
 }
 add_filter('http_request_args', 'github16702_allow_unsafe_urls', 20, 2 );
 
+function add_dokiocrm_intervals( $schedules ) {
+	// add a 'Every 1 minute' schedule to the existing set
+	$schedules['every_1_minute'] = array(
+		'interval' => 60,
+		'display' => __('Every 1 minute (DokioCRM)')
+	);
+	// $schedules['weekly'] = array(
+	// 	'interval' => 604800,
+	// 	'display' => __('Once Weekly')
+	// );
+	return $schedules;
+}
+add_filter( 'cron_schedules', 'add_dokiocrm_intervals');
 
 /**
  * Begins execution of the plugin.

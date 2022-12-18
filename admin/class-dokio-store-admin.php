@@ -138,91 +138,33 @@ class Dokio_Store_Admin {
 		register_setting( 'ds_custom_settitgs', 'save_crm_taxes' );
 	}
 
-	public function add_product(){
-		$data = [
-			'name' => 'Premium Quality',
-			'type' => 'simple',
-			'regular_price' => '999.99',
-			'description' => 'Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.',
-			'short_description' => 'Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.',
-			'categories' => [
-				[
-					'id' => 9
-				],
-				[
-					'id' => 14
-				]
-			],
-			'images' => [
-				[
-					'src' => 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_front.jpg'
-				],
-				[
-					'src' => 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_back.jpg'
-				]
-			]
-		];
+	// public function add_product(){
+	// 	$data = [
+	// 		'name' => 'Premium Quality',
+	// 		'type' => 'simple',
+	// 		'regular_price' => '999.99',
+	// 		'description' => 'Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.',
+	// 		'short_description' => 'Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.',
+	// 		'categories' => [
+	// 			[
+	// 				'id' => 9
+	// 			],
+	// 			[
+	// 				'id' => 14
+	// 			]
+	// 		],
+	// 		'images' => [
+	// 			[
+	// 				'src' => 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_front.jpg'
+	// 			],
+	// 			[
+	// 				'src' => 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_back.jpg'
+	// 			]
+	// 		]
+	// 	];
 		
-		print_r($woocommerce->post('products', $data));
-	}
-
-
-
-	//this creates custom post type for videos
-	/*public function custom_youtube_api(){
-		//
-		// Creating a function to create our CPT
-		//
-		$labels = array(
-			'name'                => _x( 'YouTube Videos', 'Post Type General Name'),
-			'singular_name'       => _x( 'YouTube Video', 'Post Type Singular Name'),
-			'menu_name'           => __( 'YouTube Video'),
-			'parent_item_colon'   => __( 'Parent Video'),
-			'all_items'           => __( 'All Videos'),
-			'view_item'           => __( 'View Videos'),
-			'add_new_item'        => __( 'Add New YouTube Video'),
-			'add_new'             => __( 'Add New'),
-			'edit_item'           => __( 'Edit'),
-			'update_item'         => __( 'Update'),
-			'search_items'        => __( 'Search'),
-			'not_found'           => __( 'Not Found'),
-			'not_found_in_trash'  => __( 'Not found in Trash'),
-		);
-		
-		// Set other options for Custom Post Type
-		
-		$args = array(
-			'label'               => __( 'wp10yvids'),
-			'description'         => __( 'YouTube Videos from our Channel'),
-			'labels'              => $labels,
-			// Features this CPT supports in Post Editor
-			'supports'            => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'comments', 'revisions', 'custom-fields', ),
-			// You can associate this CPT with a taxonomy or custom taxonomy. 
-			'taxonomies'          => array( 'genres' ),
-			// A hierarchical CPT is like Pages and can have
-			// Parent and child items. A non-hierarchical CPT
-			// is like Posts.
-			// 
-			'hierarchical'        => false,
-			'public'              => true,
-			'show_ui'             => false,
-			'show_in_menu'        => false,
-			'show_in_nav_menus'   => true,
-			'show_in_admin_bar'   => true,
-			'menu_position'       => 5,
-			'can_export'          => false,
-			'has_archive'         => true,
-			'exclude_from_search' => true,
-			'publicly_queryable'  => true,
-			'capability_type'     => 'post',
-			'show_in_rest' 		  => true,
-	
-		);
-		
-		// Registering your Custom Post Type
-		register_post_type( 'wp10yvids', $args );
-	}*/
-
+	// 	print_r($woocommerce->post('products', $data));
+	// }
 	
 	
 

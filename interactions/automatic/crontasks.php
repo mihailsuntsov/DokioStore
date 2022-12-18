@@ -1,44 +1,128 @@
 <?php
 
-    add_action('dokiocrm_taxes_cronjob', 'c_cron_taxes');
-    add_action("admin_post_turn_off_cron_taxes", "turn_off_cron_taxes"); 
+    // add_action('dokiocrm_taxes_cronjob', 'c_cron_taxes');
+    // add_action("admin_post_turn_off_cron_taxes", "turn_off_cron_taxes");
+    // add_action('admin_post_turn_on_cron_taxes', 'turn_on_cron_taxes');
+    // 
+    add_action('dokiocrm_products_cronjob', 'c_cron_products');
+    add_action("admin_post_turn_off_cron_products", "turn_off_cron_products");
+    add_action('admin_post_turn_on_cron_products', 'turn_on_cron_products');
 
-    add_action('admin_post_turn_on_cron_taxes', 'turn_on_cron_taxes');
-    function turn_on_cron_taxes() {
-        logger('--- Taxes cronjob running ---');
+    // add_action('dokiocrm_orders_cronjob', 'c_cron_orders');
+    // add_action("admin_post_turn_off_cron_orders", "turn_off_cron_orders");
+    // add_action('admin_post_turn_on_cron_orders', 'turn_on_cron_orders');
+
+    // function turn_on_cron_taxes() {
+    //     logger('--- Taxes cronjob running ---');
+    //     try {
+    //         logger('INFO--taxes/turn_on_cron_taxes-- Trying to run cronjob dokiocrm_taxes_cronjob...');
+    //         if ( !task_works( 'dokiocrm_taxes_cronjob' ) ) {
+    //             wp_schedule_event( time(), 'hourly', 'dokiocrm_taxes_cronjob');
+    //             logger('INFO--taxes/turn_on_cron_taxes-- The cronjob dokiocrm_taxes_cronjob works');
+    //         } else {
+    //             logger('INFO--taxes/turn_on_cron_taxes-- The cronjob dokiocrm_taxes_cronjob is already working');
+    //         }
+    //     } catch (Exception $e) {
+    //         echo 'ERROR--taxes/turn_on_cron_taxes-- Exception: ',  $e->getMessage(), "\n";
+    //         logger ('ERROR--taxes/turn_on_cron_taxes-- The response: '.$e->getMessage());
+    //     }
+    //     wp_redirect($_POST['backpage'],302 ); 
+    // }
+    // function turn_off_cron_taxes() {
+    //     logger('--- Taxes cronjob deleting ---');
+    //     logger('INFO--taxes/admin_post_turn_off_cron_taxes-- Trying to delete cronjob dokiocrm_taxes_cronjob...');
+    //     try {
+    //         wp_clear_scheduled_hook("dokiocrm_taxes_cronjob"); 
+    //         logger('INFO--taxes/admin_post_turn_off_cron_taxes-- The cronjob dokiocrm_taxes_cronjob deleted successfully');
+    //     } catch (Exception $e) {
+    //         echo 'ERROR--taxes/admin_post_turn_off_cron_taxes-- Exception: ',  $e->getMessage(), "\n";
+    //         logger ('ERROR--taxes/admin_post_turn_off_cron_taxes-- The response: '.$e->getMessage());
+    //     }
+    //     wp_redirect($_POST['backpage'],302 ); 
+    // }
+
+    function turn_on_cron_products() {
+        logger('--- Products, attributes, terms and categories cronjob running ---');
         try {
-            logger('INFO--taxes/turn_on_cron_taxes-- Trying to run cronjob dokiocrm_taxes_cronjob...');
-            if ( !task_works( 'dokiocrm_taxes_cronjob' ) ) {
-                wp_schedule_event( time(), 'hourly', 'dokiocrm_taxes_cronjob');
-                logger('INFO--taxes/turn_on_cron_taxes-- The cronjob dokiocrm_taxes_cronjob works');
+            logger('INFO--products/turn_on_cron_products-- Trying to run cronjob dokiocrm_products_cronjob...');
+            if ( !task_works( 'dokiocrm_products_cronjob' ) ) {
+                wp_schedule_event( time(), 'every_1_minute', 'dokiocrm_products_cronjob');
+                logger('INFO--products/turn_on_cron_products-- The cronjob dokiocrm_products_cronjob works');
             } else {
-                logger('INFO--taxes/turn_on_cron_taxes-- The cronjob dokiocrm_taxes_cronjob is already working');
+                logger('INFO--products/turn_on_cron_products-- The cronjob dokiocrm_products_cronjob is already working');
             }
         } catch (Exception $e) {
-            echo 'ERROR--taxes/turn_on_cron_taxes-- Exception: ',  $e->getMessage(), "\n";
-            logger ('ERROR--taxes/turn_on_cron_taxes-- The response: '.$e->getMessage());
+            echo 'ERROR--products/turn_on_cron_products-- Exception: ',  $e->getMessage(), "\n";
+            logger ('ERROR--products/turn_on_cron_products-- The response: '.$e->getMessage());
         }
         wp_redirect($_POST['backpage'],302 ); 
     }
-
-    function turn_off_cron_taxes() {
-        logger('--- Taxes cronjob deleting ---');
-        logger('INFO--taxes/admin_post_turn_off_cron_taxes-- Trying to delete cronjob dokiocrm_taxes_cronjob...');
+    function turn_off_cron_products() {
+        logger('--- Products, attributes, terms and categories cronjob deleting ---');
+        logger('INFO--products/admin_post_turn_off_cron_products-- Trying to delete cronjob dokiocrm_products_cronjob...');
         try {
-            wp_clear_scheduled_hook("dokiocrm_taxes_cronjob"); 
-            logger('INFO--taxes/admin_post_turn_off_cron_taxes-- The cronjob dokiocrm_taxes_cronjob deleted successfully');
+            wp_clear_scheduled_hook("dokiocrm_products_cronjob"); 
+            logger('INFO--products/admin_post_turn_off_cron_products-- The cronjob dokiocrm_products_cronjob deleted successfully');
         } catch (Exception $e) {
-            echo 'ERROR--taxes/admin_post_turn_off_cron_taxes-- Exception: ',  $e->getMessage(), "\n";
-            logger ('ERROR--taxes/admin_post_turn_off_cron_taxes-- The response: '.$e->getMessage());
+            echo 'ERROR--products/admin_post_turn_off_cron_products-- Exception: ',  $e->getMessage(), "\n";
+            logger ('ERROR--products/admin_post_turn_off_cron_products-- The response: '.$e->getMessage());
         }
         wp_redirect($_POST['backpage'],302 ); 
-    } 
-
-    function c_cron_taxes() {
-        // do something every hour
-        echo(111);
-        c_get_crm_tax_rates();
     }
+
+    // function turn_on_cron_orders() {
+    //     logger('--- Orders cronjob running ---');
+    //     try {
+    //         logger('INFO--orders/turn_on_cron_orders-- Trying to run cronjob dokiocrm_orders_cronjob...');
+    //         if ( !task_works( 'dokiocrm_orders_cronjob' ) ) {
+    //             wp_schedule_event( time(), 'hourly', 'dokiocrm_orders_cronjob');
+    //             logger('INFO--orders/turn_on_cron_orders-- The cronjob dokiocrm_orders_cronjob works');
+    //         } else {
+    //             logger('INFO--orders/turn_on_cron_orders-- The cronjob dokiocrm_orders_cronjob is already working');
+    //         }
+    //     } catch (Exception $e) {
+    //         echo 'ERROR--orders/turn_on_cron_orders-- Exception: ',  $e->getMessage(), "\n";
+    //         logger ('ERROR--orders/turn_on_cron_orders-- The response: '.$e->getMessage());
+    //     }
+    //     wp_redirect($_POST['backpage'],302 ); 
+    // }
+    // function turn_off_cron_orders() {
+    //     logger('--- Orders cronjob deleting ---');
+    //     logger('INFO--orders/admin_post_turn_off_cron_orders-- Trying to delete cronjob dokiocrm_orders_cronjob...');
+    //     try {
+    //         wp_clear_scheduled_hook("dokiocrm_orders_cronjob"); 
+    //         logger('INFO--orders/admin_post_turn_off_cron_orders-- The cronjob dokiocrm_orders_cronjob deleted successfully');
+    //     } catch (Exception $e) {
+    //         echo 'ERROR--orders/admin_post_turn_off_cron_orders-- Exception: ',  $e->getMessage(), "\n";
+    //         logger ('ERROR--orders/admin_post_turn_off_cron_orders-- The response: '.$e->getMessage());
+    //     }
+    //     wp_redirect($_POST['backpage'],302 ); 
+    // }
+
+    // function c_cron_taxes() {
+    //     echo(111);
+    //     c_get_crm_tax_rates();
+    // }
+
+
+    // function c_cron_taxes() {
+    //     // do something every hour
+    //     echo(111);
+    //     c_get_crm_tax_rates();
+    // }
+
+    function c_cron_products() {
+        c_get_crm_categories();
+        c_get_crm_attributes();
+        c_get_crm_terms();
+        c_get_crm_products();
+        c_get_crm_orders();
+    }
+
+    // function c_cron_orders() {
+    //     c_get_crm_orders();
+    // }
+
 
     function task_works($name){
         if ( wp_next_scheduled($name) ) {

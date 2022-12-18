@@ -53,7 +53,7 @@
                         <label for="woo_consumer_secret">Woocommerce consumer secret</label>
                         <input type="text" name="woo_consumer_secret" value="<?php echo get_option( 'woo_consumer_secret' ); ?>" class="form-control" id="woo_consumer_secret" placeholder="Consumer secret">
                     </div>
-                    <div class="form-check form-switch">
+                    <!-- <div class="form-check form-switch">
                     <input  class="form-check-input" 
                             type="checkbox" 
                             name="save_crm_taxes" 
@@ -69,106 +69,167 @@
                                 data-toggle="tooltip" 
                                 data-placement="top" 
                                 title="Do not remove DokioCRM tax rates that are not related to this online store">Save DokioCRM tax rates</label>
-                    </div>
+                    </div> -->
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
         </div>
         <div class="col">
             <div class="alert alert-warning">
+                <!-- <div class="alert alert-warning">
 
 
-            <button type="button" class="btn btn-success" id="sync_taxes_from_store">Sync taxes from store to DokioCRM</button><br><br>
-            <button type="button" class="btn btn-success" id="sync_taxes_to_store">Sync taxes from DokioCRM to store</button>
+                <button type="button" class="btn btn-success" id="sync_taxes_from_store">Sync taxes from store to DokioCRM</button><br><br>
+                <button type="button" class="btn btn-success" id="sync_taxes_to_store">Sync taxes from DokioCRM to store</button>
 
+                </div>
+                <div class="progress">
+                    <div id="progress" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><span id="precent_text"></span></div>
+                </div> -->
+                
+
+                <table class="table table-bordered" style="margin-top: 30px; border-radius: 4px; border-collapse: separate; background-color: white; border: 1px solid #8c8f94;" >
+                    <thead>
+                        <tr>
+                        <h1 class="display-4">Synchronization tasks</h1>
+                        <p class="lead">In this section you can control synchronization tasks</p>
+                            <!-- <th colspan=3 style = "text-align: center;"><h3>Synchronization tasks</h3></th> -->
+                        </tr>
+                    </thead>
+                    <tbody style = "font-size: 24px;">
+                        <!-- <tr>
+                            <td class="col-1" style = "text-align: center;">
+                                <div style="width: 24px;
+                                    height: 24px;
+                                    margin: 12px auto;
+                                    border-radius: 12px;
+                                    background: 
+                                    <?php echo(task_works('dokiocrm_taxes_cronjob')?'green':'red');?>;">
+                                </div>
+                            </td>
+                            <td><span style = "line-height: 47px;">Taxes</span></td>
+                            <td class="col-2" style = "text-align: center;">
+                                <form 
+                                style = "display:<?php echo(task_works('dokiocrm_taxes_cronjob')?'none':'block');?>"
+                                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                                    method="post">
+                                    <input type="hidden" name="action" value="turn_on_cron_taxes">
+                                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
+                                    <button type="submit" class="btn btn-light">Start</button>
+                                </form>
+                                <form 
+                                    style = "display:<?php echo(task_works('dokiocrm_taxes_cronjob')?'block':'none');?>"
+                                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                                    method="post">
+                                    <input type="hidden" name="action" value="turn_off_cron_taxes">
+                                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
+                                    <button type="submit" class="btn btn-light">Stop</button>
+                                </form>    
+                            </td>
+                        </tr> -->
+                        <tr>
+                            <td class="col-1" style = "text-align: center; border: 0px solid;">
+                                <div style="width: 24px;
+                                    height: 24px;
+                                    margin: 12px auto;
+                                    border-radius: 12px;
+                                    background: 
+                                    <?php echo(task_works('dokiocrm_products_cronjob')?'green':'red');?>;">
+                                </div>
+                            </td>
+                            <td style="border: 0px solid;"><span style = "line-height: 47px;">Categories, attributes, products and orders</span></td>
+                            <td class="col-2" style = "text-align: center; border: 0px solid;">
+                                <form 
+                                style = "display:<?php echo(task_works('dokiocrm_products_cronjob')?'none':'block');?>"
+                                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                                    method="post">
+                                    <input type="hidden" name="action" value="turn_on_cron_products">
+                                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
+                                    <button type="submit" class="btn btn-primary">Start</button>
+                                </form>
+                                <form 
+                                    style = "display:<?php echo(task_works('dokiocrm_products_cronjob')?'block':'none');?>"
+                                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                                    method="post">
+                                    <input type="hidden" name="action" value="turn_off_cron_products">
+                                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
+                                    <button type="submit" class="btn btn-primary">Stop</button>
+                                </form>    
+                            </td>
+                        </tr>
+                        <!-- <tr>
+                            <td class="col-1" style = "text-align: center;">
+                                <div style="width: 24px;
+                                    height: 24px;
+                                    margin: 12px auto;
+                                    border-radius: 12px;
+                                    background: 
+                                    <?php echo(task_works('dokiocrm_orders_cronjob')?'green':'red');?>;">
+                                </div>
+                            </td>
+                            <td><span style = "line-height: 47px;">Orders</span></td>
+                            <td class="col-2" style = "text-align: center;">
+                                <form 
+                                style = "display:<?php echo(task_works('dokiocrm_orders_cronjob')?'none':'block');?>"
+                                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                                    method="post">
+                                    <input type="hidden" name="action" value="turn_on_cron_orders">
+                                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
+                                    <button type="submit" class="btn btn-primary">Start</button>
+                                </form>
+                                <form 
+                                    style = "display:<?php echo(task_works('dokiocrm_orders_cronjob')?'block':'none');?>"
+                                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                                    method="post">
+                                    <input type="hidden" name="action" value="turn_off_cron_orders">
+                                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
+                                    <button type="submit" class="btn btn-primary">Stop</button>
+                                </form>
+                            </td>
+                        </tr> -->
+                    </tbody>
+                </table>
+                <!-- <form 
+                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                    method="post">
+                    <input type="hidden" name="action" value="c_get_crm_categories">
+                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
+                    <button type="submit" class="btn btn-light">Categories</button>
+                </form> 
+                <form 
+                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                    method="post">
+                    <input type="hidden" name="action" value="c_get_crm_attributes">
+                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
+                    <button type="submit" class="btn btn-light">Attributes</button>
+                </form>
+                <form 
+                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                    method="post">
+                    <input type="hidden" name="action" value="c_get_crm_terms">
+                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
+                    <button type="submit" class="btn btn-light">Terms</button>
+                </form>
+                <form 
+                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                    method="post">
+                    <input type="hidden" name="action" value="c_get_crm_products">
+                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
+                    <button type="submit" class="btn btn-light">Products</button>
+                </form>                            
+                <form 
+                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                    method="post">
+                    <input type="hidden" name="action" value="c_get_crm_orders">
+                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
+                    <button type="submit" class="btn btn-light">Orders</button>
+                </form> -->
+
+                <!-- <form method="post" action="c_get_crm_tax_rates">
+                    <button type="submit" class="btn btn-primary">get_crm_tax_rates</button>
+                </form> -->
             </div>
-            <div class="progress">
-                <div id="progress" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><span id="precent_text"></span></div>
-            </div>
-            <!-- <form action="http://localhost/DokioShop/wp-admin/admin-post.php" method="post">
-                <input type="hidden" name="action" value="c_get_crm_tax_rates">
-                <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                <input type="submit" value="Get DokioCRM tax rates">
-            </form> -->
-            
 
-            <table class="table table-bordered" style="margin-top: 30px; text-" >
-                <thead>
-                    <tr>
-                        <th colspan=3 style = "text-align: center;"><h3>Synchronization tasks</h3></th>
-                    </tr>
-                </thead>
-                <tbody style = "font-size: 24px;">
-                    <tr>
-                        <td class="col-1" style = "text-align: center;">
-                            <div style="width: 24px;
-                                height: 24px;
-                                margin: 12px auto;
-                                border-radius: 12px;
-                                background: 
-                                <?php echo(task_works('dokiocrm_taxes_cronjob')?'green':'red');?>;">
-                            </div>
-                        </td>
-                        <td><span style = "line-height: 47px;">Taxes</span></td>
-                        <td class="col-2" style = "text-align: center;">
-                            <form 
-                            style = "display:<?php echo(task_works('dokiocrm_taxes_cronjob')?'none':'block');?>"
-                                action="http://localhost/DokioShop/wp-admin/admin-post.php" 
-                                method="post">
-                                <input type="hidden" name="action" value="turn_on_cron_taxes">
-                                <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                                <button type="submit" class="btn btn-light btn-lg">Start</button>
-                                <!-- <input type="submit" value="Start"> -->
-                            </form>
-                            <form 
-                                style = "display:<?php echo(task_works('dokiocrm_taxes_cronjob')?'block':'none');?>"
-                                action="http://localhost/DokioShop/wp-admin/admin-post.php" 
-                                method="post">
-                                <input type="hidden" name="action" value="turn_off_cron_taxes">
-                                <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                                <button type="submit" class="btn btn-light btn-lg">Stop</button>
-                                <!-- <input type="submit" value="Stop"> -->
-                            </form>    
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-                            <form 
-                                action="http://localhost/DokioShop/wp-admin/admin-post.php" 
-                                method="post">
-                                <input type="hidden" name="action" value="c_get_crm_categories">
-                                <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                                <button type="submit" class="btn btn-light btn-lg">Categories</button>
-                                <!-- <input type="submit" value="Stop"> -->
-                            </form> 
-                            <form 
-                                action="http://localhost/DokioShop/wp-admin/admin-post.php" 
-                                method="post">
-                                <input type="hidden" name="action" value="c_get_crm_attributes">
-                                <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                                <button type="submit" class="btn btn-light btn-lg">Attributes</button>
-                                <!-- <input type="submit" value="Stop"> -->
-                            </form>
-                            <form 
-                                action="http://localhost/DokioShop/wp-admin/admin-post.php" 
-                                method="post">
-                                <input type="hidden" name="action" value="c_get_crm_terms">
-                                <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                                <button type="submit" class="btn btn-light btn-lg">Terms</button>
-                                <!-- <input type="submit" value="Stop"> -->
-                            </form>
-                            <form 
-                                action="http://localhost/DokioShop/wp-admin/admin-post.php" 
-                                method="post">
-                                <input type="hidden" name="action" value="c_get_crm_products">
-                                <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                                <button type="submit" class="btn btn-light btn-lg">Products</button>
-                                <!-- <input type="submit" value="Stop"> -->
-                            </form>
-
-            <!-- <form method="post" action="c_get_crm_tax_rates">
-                <button type="submit" class="btn btn-primary">get_crm_tax_rates</button>
-            </form> -->
         </div>
         
     </div>
@@ -196,9 +257,9 @@ if(isset($_GET['action'])){
     $the_action = $_GET['action'];
 }
 
-if($the_action == 'dotest'){
-    echo '11111111111111111111';
-}
+// if($the_action == 'dotest'){
+//     echo '11111111111111111111';
+// }
 
 
 

@@ -6,7 +6,7 @@
 
     add_action( 'admin_post_c_get_crm_terms', 'c_get_crm_terms' );
     function c_get_crm_terms() {
-        logger('--- Attributes auto sync ---');
+        logger('--- Terms auto sync ---');
         try {
             status_header(200);
             $woocommerce = new Client(get_option('woo_address'),get_option('woo_consumer_key'),get_option('woo_consumer_secret'),['version' => 'wc/v3']);

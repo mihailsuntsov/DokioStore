@@ -221,11 +221,11 @@
 
                     if($httpcode==200){
                         switch ($response) {
-                            case 1:
+                            case '1':
                                 echo "Fine!";
                                 logger ('INFO--categories/c_get_crm_categories-- The response: '.$response);
                                 break;
-                            case -200:
+                            case '-200':
                                 echo "WrongCrmSecretKeyException!";
                                 logger ('ERROR--categories/c_get_crm_categories-- Server error with WrongCrmSecretKeyException. Synchronization failed!');
                                 break;
