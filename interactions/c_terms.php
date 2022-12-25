@@ -9,8 +9,8 @@
         logger('--- Terms auto sync ---');
         try {
             status_header(200);
-            $woocommerce = new Client(get_option('woo_address'),get_option('woo_consumer_key'),get_option('woo_consumer_secret'),['version' => 'wc/v3']);
-            $url = 'http://localhost:8080/api/public/woo_v3/syncAttributeTermsToStore?key='.get_option( 'secret_key' );
+            $woocommerce = new Client(get_option('siteurl'),get_option('woo_consumer_key'),get_option('woo_consumer_secret'),['version' => 'wc/v3']);
+            $url = get_option( 'API_address' ).'/syncAttributeTermsToStore?key='.get_option( 'secret_key' );
             $request = curl_init($url); 
             curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($request, CURLOPT_HEADER, 0);
@@ -154,7 +154,7 @@
                     echo '<b>Sending POST request to the CRM server:</b><br>';
                     $data_to_sent = '{"crmSecretKey":"'.get_option( 'secret_key' ).'","idsSet":'.json_encode($ids_pairs).'}';
                     logger ('INFO--terms/c_get_crm_terms-- Sending POST request syncAttributeTermsIds to the CRM server with data: '.$data_to_sent);
-                    $url = 'http://localhost:8080/api/public/woo_v3/syncAttributeTermsIds';
+                    $url = get_option( 'API_address' ).'/syncAttributeTermsIds';
                     $curl = curl_init($url);
                     curl_setopt($curl, CURLOPT_POST, true);
                     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);

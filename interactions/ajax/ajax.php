@@ -30,6 +30,39 @@ function alerts() {?>
 add_action( 'admin_footer', 'my_action' ); 
 function my_action() { ?>
 	<script type="text/javascript" >
+        // Connection DokioCRM test
+            // Get tax rates from CRM and sent them to WooCommerce
+            jQuery(document).ready(function ($) {
+            $('#test_connection').click(function (e) {                
+                var crm_api_url_ = "<?php echo get_option( 'API_address' ); ?>/DokioCrmConnectionTest";
+                $.ajax({
+                    type: "GET",
+                    url: crm_api_url_+'?key=<?php echo get_option( 'secret_key' ); ?>',
+                    contentType: "application/json",
+                    success: async function (crm_response) {                                            
+                        console.log(crm_response);
+                        switch(crm_response){
+                            case 1:{// Data from the CRM system received
+                                bootstrapAlert('success', 'Ok! Connection test passed!');                      
+                                break;
+                            }
+                            case -200:{// CRM secret key error
+                                bootstrapAlert('warning', 'There is a connection, but wrong CRM secret key!');                      
+                                break;
+                            }
+                            default:{// Error
+                                bootstrapAlert('danger', 'Connection test controller error!');      
+                            }
+                        }
+                    },
+                    error: function (req, error) {
+                        bootstrapAlert('danger', 'Connection test request failed! ' + error);
+                    },
+                });
+            });
+        });
+
+
         // Get tax rates from WooCommerce and sent them to CRM
         jQuery(document).ready(function ($) {
             $('#sync_taxes_from_store').click(async function (e) {

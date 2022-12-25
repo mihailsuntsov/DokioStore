@@ -9,10 +9,10 @@
         logger('--- Orders auto sync ---');
         try {
             status_header(200);
-            $woocommerce = new Client(get_option('woo_address'),get_option('woo_consumer_key'),get_option('woo_consumer_secret'),['version' => 'wc/v3','timeout' => 240]);
+            $woocommerce = new Client(get_option('siteurl'),get_option('woo_consumer_key'),get_option('woo_consumer_secret'),['version' => 'wc/v3','timeout' => 240]);
             
             
-            $url = 'http://localhost:8080/api/public/woo_v3/getLastSynchronizedOrderTime?key='.get_option( 'secret_key' );
+            $url = get_option( 'API_address' ).'/getLastSynchronizedOrderTime?key='.get_option( 'secret_key' );
             echo $url;
             $request = curl_init($url); 
             curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
@@ -38,7 +38,7 @@
                 if(count($orders)>0){
                     $data_to_sent = '{"crmSecretKey":"'.get_option( 'secret_key' ).'","orders":'.json_encode($orders).'}';
                     logger ('INFO--products/c_get_crm_products-- Sending '.count($orders).' Woo orders to the server side by the POST request putOrdersIntoCRM.');
-                    $url = 'http://localhost:8080/api/public/woo_v3/putOrdersIntoCRM';
+                    $url = get_option( 'API_address' ).'/putOrdersIntoCRM';
                     $curl = curl_init($url);
                     curl_setopt($curl, CURLOPT_POST, true);
                     curl_setopt($curl, CURLOPT_TIMEOUT,500); // 500 seconds

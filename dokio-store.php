@@ -9,14 +9,14 @@
  * that starts the plugin.
  *
  * @link              https://dokio.me/
- * @since             1.0.0
+ * @since             1.1.0
  * @package           Dokio_Store
  *
  * @wordpress-plugin
  * Plugin Name:       DokioStore
  * Plugin URI:        https://dokio.me/
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           1.0.0
+ * Description:       This plugin is designed to synchronize products, categories, attributes from DokioCRM to WooCommerce and orders from WooCommerce to DokioCRM.
+ * Version:           1.1.0
  * Author:            Mikhail Suntsov
  * Author URI:        https://dokio.me/
  * License:           GPL-2.0+
@@ -96,7 +96,7 @@ require plugin_dir_path( __FILE__ ) . '/interactions/automatic/crontasks.php';
 // use Automattic\WooCommerce\HttpClient\HttpClientException;
 
 //   $woocommerce = new Client(
-//   get_option('woo_address'),
+//   get_option('siteurl'),
 //   get_option('woo_consumer_key'),
 //   get_option('woo_consumer_secret'),
 //   get_option('API_address'),
@@ -130,10 +130,10 @@ function add_dokiocrm_intervals( $schedules ) {
 		'interval' => 60,
 		'display' => __('Every 1 minute (DokioCRM)')
 	);
-	// $schedules['weekly'] = array(
-	// 	'interval' => 604800,
-	// 	'display' => __('Once Weekly')
-	// );
+	// $schedules['every_5_seconds'] = array(
+	// 	'interval' => 5,
+	// 	'display' => __('Every 5 seconds test (DokioCRM)')
+	// );	
 	return $schedules;
 }
 add_filter( 'cron_schedules', 'add_dokiocrm_intervals');

@@ -104,7 +104,7 @@ class Dokio_Store_Public {
 		// get the general settings options
 		$API_address = get_option('API_address');
 		$secret_key = get_option('secret_key');
-		$woo_address = get_option('woo_address');
+		$woo_address = get_option('siteurl');
 		$woo_consumer_key = get_option('woo_consumer_key');
 		$woo_consumer_secret = get_option('woo_consumer_secret');
 

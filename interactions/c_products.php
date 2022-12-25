@@ -9,9 +9,9 @@
         logger('--- Products auto sync ---');
         try {
             status_header(200);
-            $woocommerce = new Client(get_option('woo_address'),get_option('woo_consumer_key'),get_option('woo_consumer_secret'),['version' => 'wc/v3','timeout' => 240]);
+            $woocommerce = new Client(get_option('siteurl'),get_option('woo_consumer_key'),get_option('woo_consumer_secret'),['version' => 'wc/v3','timeout' => 240]);
             
-            $url = 'http://localhost:8080/api/public/woo_v3/countProductsToStoreSync?key='.get_option( 'secret_key' );
+            $url = get_option( 'API_address' ).'/countProductsToStoreSync?key='.get_option( 'secret_key' );
             echo $url;
             $request = curl_init($url); 
             curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
@@ -47,8 +47,8 @@
                         echo('<b>Current cycle: </b>'. $currentCycle . '<br> $firstResult: ' . $firstResult . '<br> $maxResults: ' . $maxResults. '<br>');
                         logger('INFO--products/c_get_crm_products-- Current cycle: ' . $currentCycle);
 
-                        // $woocommerce = new Client(get_option('woo_address'),get_option('woo_consumer_key'),get_option('woo_consumer_secret'),['version' => 'wc/v3']);
-                        $url = 'http://localhost:8080/api/public/woo_v3/syncProductsToStore?key='.get_option( 'secret_key' ).'&first_result='.$firstResult.'&max_results='.$maxResults;
+                        // $woocommerce = new Client(get_option('siteurl'),get_option('woo_consumer_key'),get_option('woo_consumer_secret'),['version' => 'wc/v3']);
+                        $url = get_option( 'API_address' ).'/syncProductsToStore?key='.get_option( 'secret_key' ).'&first_result='.$firstResult.'&max_results='.$maxResults;
                         $request = curl_init($url); 
                         curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
                         curl_setopt($request, CURLOPT_HEADER, 0);
@@ -97,7 +97,7 @@
                                     'backorders' => $crm_product->backorders, 
                                     'purchase_note' => $crm_product->purchase_note, 
                                     'menu_order' => $crm_product->menu_order, 
-                                    'reviews_allowed' => $crm_product->reviews_allowed 
+                                    'reviews_allowed' => $crm_product->reviews_allowed
                                 );
                                 if($crm_product->woo_id == NULL) {
                                     echo '$crm_product->woo_id is null<br>';
@@ -115,7 +115,7 @@
                                     logger('INFO--products/c_get_crm_products-- There is woo_id. Maybe this product is already in WooCommerce (if it wasn\'t removed manually)');
                                     // If the product wasn't removed manually, i.e. all_woo_products_ids[] contains woo's id receqved from CRM
                                     if (in_array($crm_product->woo_id, $all_woo_products_ids)) {
-                                        logger('INFO--products/c_get_crm_products-- The woo_id of the current product is in the array - updating the current product with crm_id = '.$crm_product->crm_id.', woo_id = '.$crm_product->woo_id.', name = '. $crm_product->name.', slug = '.$crm_product->slug);
+                                        logger('INFO--products/c_get_crm_products-- The woo_id of the current product is in the array - updating the current product with crm_id = '.$crm_product->crm_id.', woo_id = '.$crm_product->woo_id.', product object = '. json_encode($currentProductObject));
                                         
                                         $currentWooProduct = $woocommerce->get('products/'.$crm_product->woo_id); 
                                         if(needToUpdateImages($crm_product->images, $currentWooProduct->images))
@@ -148,7 +148,7 @@
                         $firstResult = $firstResult + $maxResults;
                         $currentCycle++;
                     }
-
+                    
                     // Sending ID's of all created in WooCommerce products to the CRM for IDs synchronization  
                     echo ('<b>ids_pairs:</b><br>');
                     foreach ($ids_pairs as $pair ) {   
@@ -158,7 +158,7 @@
                         echo '<b>Sending synchronization set of ID\'s to the CRM server:</b><br>';
                         $data_to_sent = '{"crmSecretKey":"'.get_option( 'secret_key' ).'","idsSet":'.json_encode($ids_pairs).'}';
                         logger ('INFO--products/c_get_crm_products-- Sending POST request syncProductsIds to the CRM server with data: '.$data_to_sent);
-                        $url = 'http://localhost:8080/api/public/woo_v3/syncProductsIds';
+                        $url = get_option( 'API_address' ).'/syncProductsIds';
                         $curl = curl_init($url);
                         curl_setopt($curl, CURLOPT_POST, true);
                         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -194,7 +194,7 @@
 
             // Querying woo_ID's of products that need to be deleted on the store side
             // It can be 1) Deleted on the CRM side products 2) Products than no more belong to store categories
-            $url = 'http://localhost:8080/api/public/woo_v3/getProductWooIdsToDeleteInStore?key='.get_option( 'secret_key' );
+            $url = get_option( 'API_address' ).'/getProductWooIdsToDeleteInStore?key='.get_option( 'secret_key' );
             echo $url;
             $request = curl_init($url); 
             curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
@@ -224,7 +224,7 @@
                     echo '<b>Clearing woo_ID\'s on the server side by sending the set of deleted woo_ID\'s to the CRM server</b><br>';
                     $data_to_sent = '{"crmSecretKey":"'.get_option( 'secret_key' ).'","idsSet":'.json_encode($array).'}';
                     logger ('INFO--products/c_get_crm_products-- Clearing woo_ID\'s on the server side by sending the POST request with the set of deleted woo_ID\'s to the CRM server with data: '.$data_to_sent);
-                    $url = 'http://localhost:8080/api/public/woo_v3/deleteWooIdsFromProducts';
+                    $url = get_option( 'API_address' ).'/deleteWooIdsFromProducts';
                     $curl = curl_init($url);
                     curl_setopt($curl, CURLOPT_POST, true);
                     curl_setopt($curl, CURLOPT_TIMEOUT,500); // 500 seconds

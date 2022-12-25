@@ -41,10 +41,10 @@
                         <label for="secret_key">DokioCRM Secret key</label>
                         <input type="text" name="secret_key" value="<?php echo get_option( 'secret_key' ); ?>" class="form-control" id="secret_key" placeholder="DokioCRM Secret key">
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="woo_address">Woocommerce store site address</label>
-                        <input type="text" name="woo_address" value="<?php echo get_option( 'woo_address' ); ?>" class="form-control" id="woo_address" placeholder="Store address">
-                    </div>
+                        <input type="text" name="woo_address" value="<?php //echo get_option( 'woo_address' ); ?>" class="form-control" id="woo_address" placeholder="Store address">
+                    </div> -->
                     <div class="form-group">
                         <label for="woo_consumer_key">Woocommerce consumer key</label>
                         <input type="text" name="woo_consumer_key" value="<?php echo get_option( 'woo_consumer_key' ); ?>" class="form-control" id="woo_consumer_key" placeholder="Consumer key">
@@ -70,7 +70,8 @@
                                 data-placement="top" 
                                 title="Do not remove DokioCRM tax rates that are not related to this online store">Save DokioCRM tax rates</label>
                     </div> -->
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-primary" id="test_connection">Test connection to DokioCRM</button>
                 </form>
             </div>
         </div>
@@ -111,7 +112,7 @@
                             <td class="col-2" style = "text-align: center;">
                                 <form 
                                 style = "display:<?php echo(task_works('dokiocrm_taxes_cronjob')?'none':'block');?>"
-                                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
                                     method="post">
                                     <input type="hidden" name="action" value="turn_on_cron_taxes">
                                     <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
@@ -119,7 +120,7 @@
                                 </form>
                                 <form 
                                     style = "display:<?php echo(task_works('dokiocrm_taxes_cronjob')?'block':'none');?>"
-                                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
                                     method="post">
                                     <input type="hidden" name="action" value="turn_off_cron_taxes">
                                     <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
@@ -141,7 +142,7 @@
                             <td class="col-2" style = "text-align: center; border: 0px solid;">
                                 <form 
                                 style = "display:<?php echo(task_works('dokiocrm_products_cronjob')?'none':'block');?>"
-                                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
                                     method="post">
                                     <input type="hidden" name="action" value="turn_on_cron_products">
                                     <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
@@ -149,7 +150,7 @@
                                 </form>
                                 <form 
                                     style = "display:<?php echo(task_works('dokiocrm_products_cronjob')?'block':'none');?>"
-                                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
                                     method="post">
                                     <input type="hidden" name="action" value="turn_off_cron_products">
                                     <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
@@ -171,7 +172,7 @@
                             <td class="col-2" style = "text-align: center;">
                                 <form 
                                 style = "display:<?php echo(task_works('dokiocrm_orders_cronjob')?'none':'block');?>"
-                                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
                                     method="post">
                                     <input type="hidden" name="action" value="turn_on_cron_orders">
                                     <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
@@ -179,7 +180,7 @@
                                 </form>
                                 <form 
                                     style = "display:<?php echo(task_works('dokiocrm_orders_cronjob')?'block':'none');?>"
-                                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
                                     method="post">
                                     <input type="hidden" name="action" value="turn_off_cron_orders">
                                     <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
@@ -190,35 +191,35 @@
                     </tbody>
                 </table>
                 <!-- <form 
-                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
                     method="post">
                     <input type="hidden" name="action" value="c_get_crm_categories">
                     <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
                     <button type="submit" class="btn btn-light">Categories</button>
                 </form> 
                 <form 
-                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
                     method="post">
                     <input type="hidden" name="action" value="c_get_crm_attributes">
                     <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
                     <button type="submit" class="btn btn-light">Attributes</button>
                 </form>
                 <form 
-                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                    action="<?php echo get_option( 'woo_address' ); ?>/wp-admin/admin-post.php" 
                     method="post">
                     <input type="hidden" name="action" value="c_get_crm_terms">
                     <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
                     <button type="submit" class="btn btn-light">Terms</button>
                 </form>
                 <form 
-                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
                     method="post">
                     <input type="hidden" name="action" value="c_get_crm_products">
                     <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
                     <button type="submit" class="btn btn-light">Products</button>
                 </form>                            
                 <form 
-                    action="http://localhost/DokioShop/wp-admin/admin-post.php" 
+                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
                     method="post">
                     <input type="hidden" name="action" value="c_get_crm_orders">
                     <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
@@ -243,7 +244,7 @@
 // use Automattic\WooCommerce\HttpClient\HttpClientException;
 
 // $woocommerce = new Client(
-//   get_option('woo_address'),
+//   get_option('siteurl'),
 //   get_option('woo_consumer_key'),
 //   get_option('woo_consumer_secret'),
 //   get_option('API_address'),

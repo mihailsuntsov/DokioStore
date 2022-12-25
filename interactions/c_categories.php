@@ -10,8 +10,8 @@
     function c_get_crm_categories() {
         logger('--- Categories auto sync ---');
         try {
-            $woocommerce = new Client(get_option('woo_address'),get_option('woo_consumer_key'),get_option('woo_consumer_secret'),['version' => 'wc/v3']);
-            $url = 'http://localhost:8080/api/public/woo_v3/syncProductCategoriesToStore?key='.get_option( 'secret_key' );
+            $woocommerce = new Client(get_option('siteurl'),get_option('woo_consumer_key'),get_option('woo_consumer_secret'),['version' => 'wc/v3']);
+            $url = get_option( 'API_address' ).'/syncProductCategoriesToStore?key='.get_option( 'secret_key' );
             $request = curl_init($url); 
             curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($request, CURLOPT_HEADER, 0);
@@ -205,7 +205,7 @@
                     echo '<b>Sending POST request to the CRM server:</b><br>';
                     $data_to_sent = '{"crmSecretKey":"'.get_option( 'secret_key' ).'","idsSet":'.json_encode($ids_pairs_to_post_crm).'}';
                     logger ('INFO--categories/c_get_crm_categories-- Sending POST request syncProductCategoriesIds to the CRM server with data: '.$data_to_sent);
-                    $url = 'http://localhost:8080/api/public/woo_v3/syncProductCategoriesIds';
+                    $url = get_option( 'API_address' ).'/syncProductCategoriesIds';
                     $curl = curl_init($url);
                     curl_setopt($curl, CURLOPT_POST, true);
                     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);

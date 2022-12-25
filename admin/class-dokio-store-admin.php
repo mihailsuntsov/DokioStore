@@ -132,7 +132,7 @@ class Dokio_Store_Admin {
 	public function register_general_settings(){
 		register_setting( 'ds_custom_settitgs', 'API_address' );
 		register_setting( 'ds_custom_settitgs', 'secret_key' );
-		register_setting( 'ds_custom_settitgs', 'woo_address' );
+		// register_setting( 'ds_custom_settitgs', 'siteurl' );
 		register_setting( 'ds_custom_settitgs', 'woo_consumer_key' );
 		register_setting( 'ds_custom_settitgs', 'woo_consumer_secret' );
 		register_setting( 'ds_custom_settitgs', 'save_crm_taxes' );
