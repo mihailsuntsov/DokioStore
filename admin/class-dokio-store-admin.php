@@ -136,6 +136,8 @@ class Dokio_Store_Admin {
 		register_setting( 'ds_custom_settitgs', 'woo_consumer_key' );
 		register_setting( 'ds_custom_settitgs', 'woo_consumer_secret' );
 		register_setting( 'ds_custom_settitgs', 'save_crm_taxes' );
+		register_setting( 'ds_custom_settitgs', 'use_annasta_filter' );
+		register_setting( 'ds_custom_settitgs', 'annasta_filter_value' );
 	}
 
 	// public function add_product(){

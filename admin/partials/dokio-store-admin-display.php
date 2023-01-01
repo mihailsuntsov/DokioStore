@@ -25,8 +25,8 @@
     <div class="row">
         <div class="col">
             <div class="alert alert-warning">
-                <h1 class="display-4">DokioCRM API Importer</h1>
-                <p class="lead">Use this section to save your API address and shop ID.</p>
+                <h1 class="display-4">DokioCRM plugin settings</h1>
+                <p class="lead">Use this section to set up DokioCRM plugin parameters.</p>
                 <hr class="my-4">
                 <form method="post" action="options.php">
                     <?php
@@ -53,23 +53,41 @@
                         <label for="woo_consumer_secret">Woocommerce consumer secret</label>
                         <input type="text" name="woo_consumer_secret" value="<?php echo get_option( 'woo_consumer_secret' ); ?>" class="form-control" id="woo_consumer_secret" placeholder="Consumer secret">
                     </div>
-                    <!-- <div class="form-check form-switch">
+
+                    <div class="form-check form-switch">
                     <input  class="form-check-input" 
                             type="checkbox" 
-                            name="save_crm_taxes" 
-                            id="save_crm_taxes"  
+                            name="use_annasta_filter" 
+                            id="use_annasta_filter"  
                             data-toggle="tooltip" 
                             data-placement="top" 
-                            title="Do not remove DokioCRM tax rates that are not related to this online store"
+                            title="Switch it in if your store use the free version of Annasta product filters, and if you have attributes that need to be shown in some categories and hide in the other categories, or you have attributes that should be shown or hided depending on the values of their parent attributes"
                             style="margin-top: 0.3rem; margin-left: -1.25rem;" 
-                            <?php echo (get_option( 'save_crm_taxes' )=='on'?"checked":""); ?>
+                            <?php echo (get_option( 'use_annasta_filter' )=='on'?"checked":""); ?>
                             >
                         <label  class="form-check-label" 
-                                for="save_crm_taxes" 
+                                for="use_annasta_filter" 
                                 data-toggle="tooltip" 
                                 data-placement="top" 
-                                title="Do not remove DokioCRM tax rates that are not related to this online store">Save DokioCRM tax rates</label>
-                    </div> -->
+                                title="Switch it in if your store use the free version of Annasta product filters, and if you have attributes that need to be shown in some categories and hide in the other categories, or you have attributes that should be shown or hided depending on the values of their parent attributes">Store use free Annasta product filter</label>
+                    </div>
+                    <div class="form-group" style="display:<?php echo (get_option( 'use_annasta_filter' )=='on'?"block":"none");?>">
+                        <label for="annasta_filter_value">Filter text</label>
+                        <textarea id="annasta_filter_value" name="annasta_filter_value" placeholder="   If you use free version of Annasta product filter, and if you have attributes that need to be shown in some categories and hide in the other categories, or you have attributes that should be shown or hided depending on the values of their parent attributes, then all these parameters you can set here.
+    It must be an array of string, separated by ; in the format:
+[attribute's slug name for which this condition made]:[condition by categories separated by commas]|[parent attribute's slug]=[condition by slugs of parent attribute, separated by commas] [;] [Next condition...
+
+                        Example:
+                        rent-period:houses,apartaments|deal-type=rent;
+                        construction-phase:|deal-type=sale,exchange;
+                        floor:apartaments|
+                        
+                        In this example the attribute with slug 'rent-period' will be shown only in categories 'houses','apartaments', and if attribute with slug 'deal-type' has value 'rent'
+                        the attribute with slug 'construction-phase' will be shown in all categories, and if attribute with slug 'deal-type' has values 'sale or 'exchange'
+                        the attribute with slug 'floor' will be shown only in category 'apartaments', and not depends from another attributes
+
+                        " class="form-control" rows="12"><?php echo get_option( 'annasta_filter_value' ); ?></textarea>
+                    </div>
                     <button type="submit" class="btn btn-primary">Save</button>
                     <button type="button" class="btn btn-primary" id="test_connection">Test connection to DokioCRM</button>
                 </form>
@@ -98,36 +116,6 @@
                         </tr>
                     </thead>
                     <tbody style = "font-size: 24px;">
-                        <!-- <tr>
-                            <td class="col-1" style = "text-align: center;">
-                                <div style="width: 24px;
-                                    height: 24px;
-                                    margin: 12px auto;
-                                    border-radius: 12px;
-                                    background: 
-                                    <?php echo(task_works('dokiocrm_taxes_cronjob')?'green':'red');?>;">
-                                </div>
-                            </td>
-                            <td><span style = "line-height: 47px;">Taxes</span></td>
-                            <td class="col-2" style = "text-align: center;">
-                                <form 
-                                style = "display:<?php echo(task_works('dokiocrm_taxes_cronjob')?'none':'block');?>"
-                                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
-                                    method="post">
-                                    <input type="hidden" name="action" value="turn_on_cron_taxes">
-                                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                                    <button type="submit" class="btn btn-light">Start</button>
-                                </form>
-                                <form 
-                                    style = "display:<?php echo(task_works('dokiocrm_taxes_cronjob')?'block':'none');?>"
-                                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
-                                    method="post">
-                                    <input type="hidden" name="action" value="turn_off_cron_taxes">
-                                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                                    <button type="submit" class="btn btn-light">Stop</button>
-                                </form>    
-                            </td>
-                        </tr> -->
                         <tr>
                             <td class="col-1" style = "text-align: center; border: 0px solid;">
                                 <div style="width: 24px;
@@ -158,82 +146,16 @@
                                 </form>    
                             </td>
                         </tr>
-                        <!-- <tr>
-                            <td class="col-1" style = "text-align: center;">
-                                <div style="width: 24px;
-                                    height: 24px;
-                                    margin: 12px auto;
-                                    border-radius: 12px;
-                                    background: 
-                                    <?php echo(task_works('dokiocrm_orders_cronjob')?'green':'red');?>;">
-                                </div>
-                            </td>
-                            <td><span style = "line-height: 47px;">Orders</span></td>
-                            <td class="col-2" style = "text-align: center;">
-                                <form 
-                                style = "display:<?php echo(task_works('dokiocrm_orders_cronjob')?'none':'block');?>"
-                                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
-                                    method="post">
-                                    <input type="hidden" name="action" value="turn_on_cron_orders">
-                                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                                    <button type="submit" class="btn btn-primary">Start</button>
-                                </form>
-                                <form 
-                                    style = "display:<?php echo(task_works('dokiocrm_orders_cronjob')?'block':'none');?>"
-                                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
-                                    method="post">
-                                    <input type="hidden" name="action" value="turn_off_cron_orders">
-                                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                                    <button type="submit" class="btn btn-primary">Stop</button>
-                                </form>
-                            </td>
-                        </tr> -->
+                        
                     </tbody>
                 </table>
-                <!-- <form 
-                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
-                    method="post">
-                    <input type="hidden" name="action" value="c_get_crm_categories">
-                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                    <button type="submit" class="btn btn-light">Categories</button>
-                </form> 
-                <form 
-                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
-                    method="post">
-                    <input type="hidden" name="action" value="c_get_crm_attributes">
-                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                    <button type="submit" class="btn btn-light">Attributes</button>
-                </form>
-                <form 
-                    action="<?php echo get_option( 'woo_address' ); ?>/wp-admin/admin-post.php" 
-                    method="post">
-                    <input type="hidden" name="action" value="c_get_crm_terms">
-                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                    <button type="submit" class="btn btn-light">Terms</button>
-                </form>
-                <form 
-                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
-                    method="post">
-                    <input type="hidden" name="action" value="c_get_crm_products">
-                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                    <button type="submit" class="btn btn-light">Products</button>
-                </form>                            
-                <form 
-                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
-                    method="post">
-                    <input type="hidden" name="action" value="c_get_crm_orders">
-                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                    <button type="submit" class="btn btn-light">Orders</button>
-                </form> -->
-
-                <!-- <form method="post" action="c_get_crm_tax_rates">
-                    <button type="submit" class="btn btn-primary">get_crm_tax_rates</button>
-                </form> -->
+                
             </div>
 
         </div>
         
     </div>
+    
 </div>
 
 

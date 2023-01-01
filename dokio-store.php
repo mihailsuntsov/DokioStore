@@ -71,6 +71,9 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-dokio-store.php';
 
 require plugin_dir_path( __FILE__ ) . '/interactions/automatic/crontasks.php';
 
+
+require plugin_dir_path( __FILE__ ) . '/interactions/additional/annasta_filter.php';
+
 // require plugin_dir_path( __FILE__ ) . '/admin/partials/tutsplus-actions.php';
 
 // require plugin_dir_path( __FILE__ ) . '/interactions/test.php';
