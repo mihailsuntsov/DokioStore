@@ -11,7 +11,6 @@
             status_header(200);
             $woocommerce = new Client(get_option('siteurl'),get_option('woo_consumer_key'),get_option('woo_consumer_secret'),['version' => 'wc/v3','timeout' => 240]);
             
-            
             $url = get_option( 'API_address' ).'/getLastSynchronizedOrderTime?key='.get_option( 'secret_key' );
             echo $url;
             $request = curl_init($url); 
@@ -25,7 +24,7 @@
             logger('INFO--orders/c_get_crm_orders/getLastSynchronizedOrderTime-- Received data: '. $last_sync_date );
             $httpcode = curl_getinfo($request, CURLINFO_HTTP_CODE);
             curl_close($request);
-            if($httpcode==200 or $last_sync_date = NULL or $last_sync_date='' or strlen($last_sync_date)!=19){
+            if($httpcode==200 or $last_sync_date = NULL or $last_sync_date=''){
                 echo('<b>The last date of synchronized order is: </b>'. $last_sync_date . '<br>');
                 logger('INFO--orders/c_get_crm_orders/getLastSynchronizedOrderTime-- The last date of synchronized order is: ' . $last_sync_date);
 
@@ -72,7 +71,7 @@
 
             } else {
                 echo '<b>Server error with response code = '.$httpcode.' Synchronization failed!</b><br>';
-                logger ('ERROR--orders/c_get_crm_orders/getLastSynchronizedOrderTime-- Server error with response code = '.$httpcode.', Response = '.$response.' Synchronization failed!');
+                logger ('ERROR--orders/c_get_crm_orders/getLastSynchronizedOrderTime-- Server error with response code = '.$httpcode.', Response = '.$response.' Synchronization failed!, Received data = '.$last_sync_date);
             }            
         } catch (HttpClientException $e) {
             echo '<pre><code>' . print_r($e->getMessage(), true) . '</code><pre>'; // Error message.

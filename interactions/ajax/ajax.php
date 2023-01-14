@@ -56,7 +56,7 @@ function my_action() { ?>
                         }
                     },
                     error: function (req, error) {
-                        bootstrapAlert('danger', 'Connection test request failed! ' + error);
+                        bootstrapAlert('danger', 'Connection test request failed! ' + req.responseText);
                     },
                 });
             });

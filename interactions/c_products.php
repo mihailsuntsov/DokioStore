@@ -143,7 +143,7 @@
                             }
                         } else {
                             echo '<b>Server error with response code = '.$httpcode.' Synchronization failed!</b><br>';
-                            logger ('ERROR--products/c_get_crm_products-- Server error with response code = '.$httpcode.', Response = '.$response.' Synchronization failed!');
+                            logger ('ERROR--products/c_get_crm_products-- Server error with response code = '.$httpcode.', Response = '.$response.' Synchronization failed!, Received data = '.$data);
                         }
                         $firstResult = $firstResult + $maxResults;
                         $currentCycle++;
@@ -189,7 +189,7 @@
                 }
             } else {
                 echo '<b>Server error with response code = '.$httpcode.' Synchronization failed!</b><br>';
-                logger ('ERROR--products/c_get_crm_products-- Server error with response code = '.$httpcode.', Response = '.$response.' Synchronization failed!');
+                logger ('ERROR--products/c_get_crm_products-- Server error with response code = '.$httpcode.', Response = '.$response.' Synchronization failed!, Received data = '.$data);
             }
 
             // Querying woo_ID's of products that need to be deleted on the store side
@@ -254,7 +254,7 @@
                 }
             } else {
                 echo '<b>Server error of request getProductWooIdsToDeleteInStore with response code = '.$httpcode.' Synchronization failed!</b><br>';
-                logger ('ERROR--products/c_get_crm_products-- Server error of request getProductWooIdsToDeleteInStore with response code = '.$httpcode.', Response = '.$response.' Synchronization failed!');
+                logger ('ERROR--products/c_get_crm_products-- Server error of request getProductWooIdsToDeleteInStore with response code = '.$httpcode.', Response = '.$response.' Synchronization failed!, Received data = '.$data);
             }
 
         } catch (HttpClientException $e) {

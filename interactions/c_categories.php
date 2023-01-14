@@ -236,7 +236,7 @@
                         }
                     } else {
                         echo '<b>Server error with response code = '.$httpcode.' Synchronization failed!</b><br>';
-                        logger ('ERROR--categories/c_get_crm_categories-- Server error with response code = '.$httpcode.', Response = '.$response.' Synchronization failed!');
+                        logger ('ERROR--categories/c_get_crm_categories-- Server error with response code = '.$httpcode.', Response = '.$response.' Synchronization failed!, Received data = '.$data);
                     }                    
                 } else {
                     echo '<b>Nothing to send to the CRM server. Synchronization finished!</b><br>';
@@ -244,7 +244,7 @@
                 }
             } else {
                 echo '<b>Server error with response code = '.$httpcode.' Synchronization failed!</b><br>';
-                logger ('ERROR--categories/c_get_crm_categories-- Server error with response code = '.$httpcode.', Response = '.$response.' Synchronization failed!');
+                logger ('ERROR--categories/c_get_crm_categories-- Server error with response code = '.$httpcode.', Response = '.$response.' Synchronization failed!, Received data = '.$data);
             }
 
         }  catch (HttpClientException $e) {

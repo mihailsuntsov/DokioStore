@@ -169,7 +169,7 @@
                 }
             } else {
                 echo '<b>Server error with response code = '.$httpcode.' Synchronization failed!</b><br>';
-                logger ('ERROR--terms/c_get_crm_terms-- Server error with response code = '.$httpcode.', Response = '.$response.' Synchronization failed!');
+                logger ('ERROR--terms/c_get_crm_terms-- Server error with response code = '.$httpcode.', Response = '.$response.' Synchronization failed!, Received data = '.$data);
             }
 
         }  catch (HttpClientException $e) {
