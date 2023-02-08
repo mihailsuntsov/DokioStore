@@ -255,9 +255,11 @@
             logger ('The Message: '.print_r($e->getMessage(), true));
             logger ('The Request: '.print_r($e->getRequest(), true));
             logger ('The Response: '.print_r($e->getResponse(), true));
+            update_option( 'is_sync_task_executed', 'false', 'yes' );
         } catch (Exception $e) {
             echo 'Exception: ',  $e->getMessage(), "\n";
             logger ('ERROR--categories/c_get_crm_categories-- The response: '.$e->getMessage());
+            update_option( 'is_sync_task_executed', 'false', 'yes' );
         }
     }
     

@@ -14,19 +14,19 @@
 
  $curr_page = $_GET['page'];
  $curr_url = $_SERVER['REQUEST_URI'];
-//  echo  $curr_url;
-//  include_once( 'tutsplus-actions.php' );
-//  tutsplus_action();
+ $plugin_version = $this->version;
+
 ?>
 
-<h1>General Settings for DokioStore</h1><br>
+<h1>DokioStore</h1> 
+<div style="position: absolute;top: 0px;right: 5px;">ver. <?php echo $plugin_version; ?></div>
 <hr>
 <div class="container" style="max-width:100%;">
-    <div class="row">
+    <div class="row">   
         <div class="col">
             <div class="alert alert-warning">
-                <h1 class="display-4">DokioCRM plugin settings</h1>
-                <p class="lead">Use this section to set up DokioCRM plugin parameters.</p>
+                <h1 class="display-4">Settings</h1>
+                <p class="lead">Use this section to set up DokioStore plugin parameters.</p>
                 <hr class="my-4">
                 <form method="post" action="options.php">
                     <?php
@@ -54,7 +54,7 @@
                         <input type="text" name="woo_consumer_secret" value="<?php echo get_option( 'woo_consumer_secret' ); ?>" class="form-control" id="woo_consumer_secret" placeholder="Consumer secret">
                     </div>
 
-                    <div class="form-check form-switch">
+                    <div class="form-check form-switch" style="margin-bottom: 15px;">
                     <input  class="form-check-input" 
                             type="checkbox" 
                             name="use_annasta_filter" 
@@ -89,7 +89,8 @@
                         " class="form-control" rows="12"><?php echo get_option( 'annasta_filter_value' ); ?></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Save</button>
-                    <button type="button" class="btn btn-primary" id="test_connection">Test connection to DokioCRM</button>
+                    <button type="button" class="btn btn-primary" id="test_crm_connection">Test connection to DokioCRM</button>
+                    <button type="button" class="btn btn-primary" id="test_woo_connection">Test connection to WooCommerce</button>
                 </form>
             </div>
         </div>

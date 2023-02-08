@@ -16,7 +16,7 @@
  * Plugin Name:       DokioStore
  * Plugin URI:        https://dokio.me/
  * Description:       This plugin is designed to synchronize products, categories, attributes from DokioCRM to WooCommerce and orders from WooCommerce to DokioCRM.
- * Version:           1.1.0
+ * Version:           1.1.1-2
  * Author:            Mikhail Suntsov
  * Author URI:        https://dokio.me/
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'DOKIO_STORE_VERSION', '1.1.1' );
+define( 'DOKIO_STORE_VERSION', '1.1.1-2' );
 
 
 // echo json_encode($woocommerce->get('orders'));
@@ -74,43 +74,8 @@ require plugin_dir_path( __FILE__ ) . '/interactions/automatic/crontasks.php';
 
 require plugin_dir_path( __FILE__ ) . '/interactions/additional/annasta_filter.php';
 
-// require plugin_dir_path( __FILE__ ) . '/admin/partials/tutsplus-actions.php';
-
-// require plugin_dir_path( __FILE__ ) . '/interactions/test.php';
-
-
-// function tutsplus_action() {
-// 	do_action( 'tutsplus_action' );
-//   }
-  
-  /**
-   * Register the action with WordPress.
-   */
-//  add_action( 'tutsplus_action', 'tutsplus_action_example' );
-//  function tutsplus_action_example() {
-//    echo 'This is a custom action hook - 1.';
-//  }
-
-
-
-// require __DIR__ . '/vendor/autoload.php';
-
-// use Automattic\WooCommerce\Client;
-// use Automattic\WooCommerce\HttpClient\HttpClientException;
-
-//   $woocommerce = new Client(
-//   get_option('siteurl'),
-//   get_option('woo_consumer_key'),
-//   get_option('woo_consumer_secret'),
-//   get_option('API_address'),
-//   get_option('secret_key'),
-//   [
-//     'version' => 'wc/v3',
-//   ]
-// );
-
-
  require plugin_dir_path( __FILE__ ) . '/interactions/taxes.php';
+ require plugin_dir_path( __FILE__ ) . '/interactions/test_woo.php';
  require plugin_dir_path( __FILE__ ) . '/interactions/c_taxes.php';
  require plugin_dir_path( __FILE__ ) . '/interactions/c_categories.php';
  require plugin_dir_path( __FILE__ ) . '/interactions/c_attributes.php';

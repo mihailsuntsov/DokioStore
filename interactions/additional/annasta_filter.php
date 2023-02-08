@@ -9,6 +9,26 @@
 			$filters=explode( ';', $annasta_filter_value);
 			//echo '1--'.get_option( 'annasta_filter_value' ).'--1';
 			// print_r($filters);
+			
+			
+			$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+		//   echo "actual_link() ->". parse_url($actual_link)->path."<-<br>->";
+		$url = parse_url($actual_link);
+		// print_r($url);
+		// echo"<br>";
+		$path=trim($url['path'], '/');		
+		$current_category = end(explode( '/', $path ));
+// 		echo "current_category - ".$current_category;
+			
+	 	$parameter_categories = explode( ',', $_GET['product-categories'] );
+	 	if ($parameter_categories) 
+		 	$all_categories = array_merge($parameter_categories,array($current_category));
+	 	else
+	 		$all_categories = array($current_category);
+			
+// 			print_r($all_categories);
+			
+			
 			$new_url='';
 			foreach ($filters as $filter)
 			{
@@ -33,7 +53,8 @@
 				//  or 
 					||
 				//	if there are the conditions of categories and (categories are not selected     or (categories are selected           but there is no overlaps of              the selected categories    and    current attribute categories))
-					(count($current_categories_conditions)>0&&(!isset($_GET['product-categories']) || (isset($_GET['product-categories']) && count(array_intersect(explode( ',', $_GET['product-categories'] ), $current_categories_conditions))==0)))
+					//(count($current_categories_conditions)>0&&(!isset($_GET['product-categories']) || (isset($_GET['product-categories']) && count(array_intersect(explode( ',', $_GET['product-categories'] ), $current_categories_conditions))==0)))
+					(count($current_categories_conditions)>0&&((count(array_intersect($all_categories, $current_categories_conditions))==0)))
 					)
 					{				
 						$style=$style.' div[data-taxonomy=pa_'.$current_attribute.'-filter] {display:none;}';
@@ -52,7 +73,7 @@
 	add_action('wp_head','setFilterStyles');
 	function setFilterStyles(){
 		global $style;
-		if(is_shop() && $style!=''){
+		if((is_shop() || is_product_category()) && $style!=''){
 			echo '<style>'.$style.'</style>';
 		}
 	}

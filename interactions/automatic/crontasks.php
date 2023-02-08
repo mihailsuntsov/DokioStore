@@ -7,7 +7,6 @@
     add_action('dokiocrm_products_cronjob', 'c_cron_products');
     add_action("admin_post_turn_off_cron_products", "turn_off_cron_products");
     add_action('admin_post_turn_on_cron_products', 'turn_on_cron_products');
-
     // add_action('dokiocrm_orders_cronjob', 'c_cron_orders');
     // add_action("admin_post_turn_off_cron_orders", "turn_off_cron_orders");
     // add_action('admin_post_turn_on_cron_orders', 'turn_on_cron_orders');
@@ -112,12 +111,33 @@
     // }
 
     function c_cron_products() {
-        c_get_crm_categories();
-        c_get_crm_attributes();
-        c_get_crm_terms();
-        c_get_crm_products();
-        c_get_crm_orders();
+    
+        check_sync_task_executed_option_existed();
+    
+        if(get_option( 'is_sync_task_executed' ) == 'false'){
+          update_option( 'is_sync_task_executed', 'true', 'yes' );
+          logger('INFO >>>>>>>>>>>>    STARTING NEW SYNCHRONIZATION CYCLE     >>>>>>>>>>>>');
+          c_get_crm_categories();
+          c_get_crm_attributes();
+          c_get_crm_terms();
+          c_get_crm_products();
+          c_get_crm_orders();
+          logger('INFO <<<<<<<<<<<<    FINISHING SYNCHRONIZATION CYCLE     <<<<<<<<<<<<');
+          update_option( 'is_sync_task_executed', 'false', 'yes' );
+        } else {
+          logger('INFO ******   New synchronization cycle is not started because of previous task is still executed   ******');
+        }
     }
+
+    function check_sync_task_executed_option_existed(){
+    
+       if(!get_option('is_sync_task_executed')){           
+             add_option('is_sync_task_executed', 'false');
+        }
+    
+    }
+
+
 
     // function c_cron_orders() {
     //     c_get_crm_orders();

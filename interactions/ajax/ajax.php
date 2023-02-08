@@ -18,7 +18,7 @@ function alerts() {?>
                         offset: {from:"top", amount: 50}, // top or bottom 
                         width: 'auto', // (integer, or 'auto')
                         align: "right", // left right center
-                        delay: 3000,
+                        delay: 6000,
                         allow_dismiss: true,
                     });
                 });
@@ -31,9 +31,8 @@ add_action( 'admin_footer', 'my_action' );
 function my_action() { ?>
 	<script type="text/javascript" >
         // Connection DokioCRM test
-            // Get tax rates from CRM and sent them to WooCommerce
-            jQuery(document).ready(function ($) {
-            $('#test_connection').click(function (e) {                
+        jQuery(document).ready(function ($) {
+            $('#test_crm_connection').click(function (e) {                
                 var crm_api_url_ = "<?php echo get_option( 'API_address' ); ?>/DokioCrmConnectionTest";
                 $.ajax({
                     type: "GET",
@@ -56,12 +55,25 @@ function my_action() { ?>
                         }
                     },
                     error: function (req, error) {
-                        bootstrapAlert('danger', 'Connection test request failed! ' + req.responseText);
+                        bootstrapAlert('danger', 'Connection DokioCRM test request failed! ' + req.responseText);
                     },
                 });
             });
         });
-
+        // Connection WooCommerce test
+        jQuery(document).ready(function ($) {
+            $('#test_woo_connection').click(async function (e) { 
+                try {
+                    const result = await getTestWooConnection($);
+                    if(result){                    
+                        // sentTaxesToCRM($, result);
+                        bootstrapAlert('success', 'Ok! Connection WooCommerce test is passed!');  
+                    }
+                } catch (error) {
+                    bootstrapAlert('danger', '<p>Connection WooCommerce test failed!</p><p><b>Please check that:</b><br>1. Settings->Permalinks->Permalink structure is not equals "Plain"<br>2.The fields <i>Woocommerce consumer key</i> and <i>Woocommerce consumer key</i> are filled in correctly</p><hr><p>Error message: ' + JSON.stringify(error)+'</p>');      
+                }
+            });
+        });
 
         // Get tax rates from WooCommerce and sent them to CRM
         jQuery(document).ready(function ($) {
@@ -282,6 +294,15 @@ function my_action() { ?>
                     dataType: 'json',
                     url: ajaxurl,
                     data: {'action': 'list_all_taxes'}
+                });
+        }
+
+        async function getTestWooConnection($){
+            return  $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    url: ajaxurl,
+                    data: {'action': 'test_woo_connection'}
                 });
         }
 
