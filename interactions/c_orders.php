@@ -72,6 +72,7 @@
             } else {
                 echo '<b>Server error with response code = '.$httpcode.' Synchronization failed!</b><br>';
                 logger ('ERROR--orders/c_get_crm_orders/getLastSynchronizedOrderTime-- Server error with response code = '.$httpcode.', Response = '.$response.' Synchronization failed!, Received data = '.$last_sync_date);
+                update_option( 'is_sync_task_executed', 'false', 'yes' );
             }            
         } catch (HttpClientException $e) {
             echo '<pre><code>' . print_r($e->getMessage(), true) . '</code><pre>'; // Error message.

@@ -18,7 +18,8 @@ if ( ! function_exists( 'logger' ) ) {
   function logger( $entry ) { 
     // Get WordPress uploads directory.
     $upload_dir = wp_upload_dir();
-    $upload_dir = $upload_dir['basedir'];
+    $upload_dir = $upload_dir['basedir'].'/DokioStore logs';
+    wp_mkdir_p( $upload_dir );
     // If the entry is array, json_encode.
     if ( is_array( $entry ) ) { 
       $entry = json_encode( $entry ); 
