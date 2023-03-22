@@ -16,7 +16,7 @@
  * Plugin Name:       DokioStore
  * Plugin URI:        https://dokio.me/
  * Description:       This plugin is designed to synchronize products, categories, attributes from DokioCRM to WooCommerce and orders from WooCommerce to DokioCRM.
- * Version:           1.2.0
+ * Version:           1.2.0-1
  * Author:            Mikhail Suntsov
  * Author URI:        https://dokio.me/
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'DOKIO_STORE_VERSION', '1.2.0' );
+define( 'DOKIO_STORE_VERSION', '1.2.0-1' );
 
 
 // echo json_encode($woocommerce->get('orders'));

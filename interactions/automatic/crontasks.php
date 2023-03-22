@@ -58,13 +58,18 @@
     }
     function turn_off_cron_products() {
         logger('--- Products, attributes, terms and categories cronjob deleting ---');
-        logger('INFO--products/admin_post_turn_off_cron_products-- Trying to delete cronjob dokiocrm_products_cronjob...');
+        logger('INFO--products/turn_off_cron_products-- Trying to delete cronjob dokiocrm_products_cronjob...');
         try {
-            wp_clear_scheduled_hook("dokiocrm_products_cronjob"); 
-            logger('INFO--products/admin_post_turn_off_cron_products-- The cronjob dokiocrm_products_cronjob deleted successfully');
+            // On success an integer indicating number of events unscheduled (0 indicates no events were registered with the hook and arguments combination), false or WP_Error if unscheduling one or more events fail.
+            $unschedule_result = wp_clear_scheduled_hook("dokiocrm_products_cronjob");
+            if($unschedule_result != false && $unschedule_result > 0){
+                logger('INFO--products/turn_off_cron_products-- The cronjob dokiocrm_products_cronjob deleted successfully');
+                update_option( 'is_sync_task_executed', 'false', 'yes' ); 
+            } else logger ('ERROR--products/turn_off_cron_products-- wp_clear_scheduled_hook returns '.$unschedule_result);
+            
         } catch (Exception $e) {
-            echo 'ERROR--products/admin_post_turn_off_cron_products-- Exception: ',  $e->getMessage(), "\n";
-            logger ('ERROR--products/admin_post_turn_off_cron_products-- The response: '.$e->getMessage());
+            echo 'ERROR--products/turn_off_cron_products-- Exception: ',  $e->getMessage(), "\n";
+            logger ('ERROR--products/turn_off_cron_products-- The response: '.$e->getMessage());
         }
         wp_redirect($_POST['backpage'],302 ); 
     }

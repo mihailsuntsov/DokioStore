@@ -50,6 +50,7 @@
                     echo '<pre>The response of putOrdersIntoCRM: ';
                     print_r ($response);
                     echo '<br></pre>';
+                    logger ('INFO--products/c_get_crm_products/putOrdersIntoCRM: Response: '.$response);
                     switch ($response) {
                         case NULL:
                             logger ('ERROR--products/c_get_crm_products/putOrdersIntoCRM: Error of the creating orders on the server side!: Response: '.$response);
