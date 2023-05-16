@@ -77,9 +77,15 @@
                                 echo('<b>Current product name: </b><br>');
                                 print_r ($crm_product->name);
                                 echo('<br>');
+
                                 $currentProductImagesArray     =    formImagesArray     ($crm_product->images);
                                 $currentProductCategoriesArray =    formCategoriesArray ($crm_product->categories);
                                 $currentProductAttributesArray =    formAttributesArray ($crm_product->attributes);
+                                $currentProductCrosssellsArray =    formCrosssellsArray ($crm_product->crosssells);
+                                $currentProductUpsellsArray =       formUpsellsArray    ($crm_product->upsells);
+                                $currentProductDefaultAttributesArray =    formDefaultAttributesArray ($crm_product->defaultAttributes);
+                                $loadedProductVariationsWooIds =   formVariationsArray  ($crm_product->variations_woo_ids);    
+
                                 $currentProductObject = array(
                                     'name' => $crm_product->name, 
                                     'type' => $crm_product->type, 
@@ -97,7 +103,10 @@
                                     'backorders' => $crm_product->backorders, 
                                     'purchase_note' => $crm_product->purchase_note, 
                                     'menu_order' => $crm_product->menu_order, 
-                                    'reviews_allowed' => $crm_product->reviews_allowed
+                                    'reviews_allowed' => $crm_product->reviews_allowed,
+                                    'upsell_ids' => $currentProductUpsellsArray,
+                                    'cross_sell_ids' => $currentProductCrosssellsArray,
+                                    'default_attributes' => $currentProductDefaultAttributesArray
                                 );
                                 if($crm_product->woo_id == NULL) {
                                     echo '$crm_product->woo_id is null<br>';
@@ -128,6 +137,34 @@
                                         echo('</pre><br>');
                                         
                                         array_push($ids_pairs, (object) ['id'=>$crm_product->woo_id, 'crm_id'=>$crm_product->crm_id]);
+
+                                        logger('INFO--products/c_get_crm_products-- Deleting variations that deleted on a CRM side');
+
+                                        // 1. Getting all current product variation:
+                                        $variations = $woocommerce->get('products/'.$crm_product->woo_id.'/variations');
+                                        $current_product_variations_woo_ids = wp_list_pluck( $variations, 'id' );
+                                        logger('INFO--products/c_get_crm_products-- $current_product_variations_woo_ids: '.json_encode($current_product_variations_woo_ids));
+                                        logger('INFO--products/c_get_crm_products-- $loadedProductVariationsWooIds:'.json_encode($loadedProductVariationsWooIds));
+                                        // 2. Prepare array of ids to delete
+                                        $variationsWooIdsToDelete = [];
+                                        foreach ($current_product_variations_woo_ids as $vwid ) { 
+                                            logger('INFO--products/c_get_crm_products-- foreach comparsing, $vwid = '.$vwid.', $loadedProductVariationsWooIds = '.json_encode($loadedProductVariationsWooIds));  
+                                            if (!in_array($vwid, $loadedProductVariationsWooIds)){
+                                                logger('INFO--products/c_get_crm_products-- not in array, adding '.$vwid);
+                                                 array_push($variationsWooIdsToDelete,$vwid);
+                                            }
+                                        }
+                                        // 3. Deleting variations that was deleted on the CRM side
+                                        logger('INFO--products/c_get_crm_products-- Variations woo_ids to delete:'.json_encode($variationsWooIdsToDelete));
+                                        if (sizeof($variationsWooIdsToDelete)>0){
+                                            logger('INFO--products/c_get_crm_products-- Deleting variations that was deleted on the CRM side ... ');
+                                            foreach ($variationsWooIdsToDelete as $vwid_toDelete ) { 
+                                                $woocommerce->delete('products/'.$crm_product->woo_id.'/variations/'.$vwid_toDelete, ['force' => true]);
+                                            }
+                                            $variations = $woocommerce->get('products/'.$crm_product->woo_id.'/variations');
+                                            $current_product_variations_woo_ids = wp_list_pluck( $variations, 'id' );
+                                            logger('INFO--products/c_get_crm_products-- After deletion current product has following woo_ids of its variations: '.json_encode($current_product_variations_woo_ids));
+                                        }
                                     } else { //if the product was removed manually, i.e. all_woo_products_ids[] does not contain woo's id receqved from CRM
                                         logger('INFO--products/c_get_crm_products-- The product with woo_id = '.$crm_product->woo_id.' is not in WooCommerce, it was removed manually.');
                                         logger('INFO--products/c_get_crm_products-- Creating product that was removed manually');
@@ -297,6 +334,33 @@
         }
         return $categoriesArray;
     }
+    function formUpsellsArray($arr){      
+        $retArray=[];
+        echo 'upsells Array: \n';
+        Print_r($arr);
+        foreach ($arr as $e ) {
+            array_push($retArray,$e);
+        }
+        return $retArray;
+    }
+    function formCrosssellsArray($arr){      
+        $retArray=[];
+        echo 'crosssells Array: \n';
+        Print_r($arr);
+        foreach ($arr as $e ) {
+            array_push($retArray,$e);
+        }
+        return $retArray;   
+    }
+    function formVariationsArray($arr){      
+        $retArray=[];
+        echo 'Variations Array: \n';
+        Print_r($arr);
+        foreach ($arr as $e ) {
+            array_push($retArray,$e);
+        }
+        return $retArray;   
+    }
     function formAttributesArray($arr){      
         $attributesArray=[];
         echo 'Attributes Array: \n';
@@ -312,6 +376,21 @@
         }
         return $attributesArray;
     }
+
+    function formDefaultAttributesArray($arr){      
+        $attributesArray=[];
+        echo 'Default Attributes Array: \n';
+        Print_r($arr);
+        foreach ($arr as $e ) {
+            array_push($attributesArray,[
+                'id' =>     $e->woo_attribute_id,
+                'name' =>   $e->name,
+                'option' => $e->option
+            ]);
+        }
+        return $attributesArray;
+    }
+
     function needToUpdateImages($dokioImages, $wooImages){
         $need = false;
 

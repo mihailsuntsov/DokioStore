@@ -126,7 +126,6 @@
                             $woo_data = [
                                 'name' => $category->name,
                                 'description' => $category->description,
-                                'slug' => $category->slug,
                                 'display' => $category->display,
                                 'menu_order' => $category->menu_order,
                                 'parent' => ($category->parent_crm_id == 0)?NULL:getWooIdByCrmId($ids_pairs_to_synchronize,$category->parent_crm_id),
@@ -136,6 +135,9 @@
                                     'alt'   => ($category->img_address == NULL)?'':$category->img_alt                   
                                 ]
                             ];
+                            // you shouldn't create or update category with "" slug (even send null instead)
+                            if(trim($category->slug)!=""){$woo_data['slug'] = $category->slug;}
+
                             if($category->img_address != NULL){
                             echo("woo_data - name - ". $woo_data['name'] . "<br>");
                             echo ("woo_data - image - name". $woo_data['image']['name'] . "<br>");  
