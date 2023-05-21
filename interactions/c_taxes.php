@@ -114,6 +114,10 @@
             echo 'Exception: ',  $e->getMessage(), "\n";
             logger ('ERROR--taxes/c_get_crm_tax_rates-- The response: '.$e->getMessage());
             update_option( 'is_sync_task_executed', 'false', 'yes' );
+        } catch(Throwable $e){
+            echo 'Exception: ',  $e->getMessage(), "\n";
+            logger ('ERROR--taxes/c_get_crm_tax_rates-- The response: '.$e->getMessage());
+            update_option( 'is_sync_task_executed', 'false', 'yes' );
         }
     }
     

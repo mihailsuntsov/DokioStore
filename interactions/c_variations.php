@@ -119,20 +119,23 @@
                                     // $product = wc_get_product($crm_variation->parent_product_woo_id); 
                                     // $variations = $product->get_available_variations(); 
                                     $variations = $woocommerce->get('products/'.$crm_variation->parent_product_woo_id.'/variations');
+                                    // logger('INFO--variations/c_get_crm_variation-- $variations = '.json_encode($variations));
                                     $current_product_variations_woo_ids = wp_list_pluck( $variations, 'id' ); 
                                     $woo_variation_picture_name='';
 
-                                    foreach ($product_variations as $variation) {
-
-                                        if($variation['variation_id'] == $crm_variation->woo_id){
-                                            $woo_variation_picture_name = $variation['image']['name'];
+                                    foreach ($variations as $variation) {
+                                        // logger('INFO--variations/c_get_crm_variation-- $variation = '.json_encode($variation));
+                                        if($variation->id == $crm_variation->woo_id){
+                                            //  logger('INFO--variations/c_get_crm_variations-- image->name = '.$variation->image->name);
+                                            $woo_variation_picture_name = $variation->image->name;
                                         }
                                     }
-                                    logger('INFO--products/c_get_crm_products-- All current product (with id='.$crm_variation->parent_product_woo_id.') variations woo_ids: '.json_encode($current_product_variations_woo_ids));
+                                    logger('INFO--variations/c_get_crm_variations-- All current product (with id='.$crm_variation->parent_product_woo_id.') variations woo_ids: '.json_encode($current_product_variations_woo_ids));
                                    
                                     if (in_array($crm_variation->woo_id, $current_product_variations_woo_ids)) {
                                         logger('INFO--variations/c_get_crm_variations-- The woo_id of the current variation with id='.$crm_variation->woo_id.' is in the array  '.json_encode($current_product_variations_woo_ids).'. Updating the current variation with crm_id = '.$crm_variation->crm_id.', woo_id = '.$crm_variation->woo_id.', variation object = '. json_encode($currentVariationObject));
 
+                                        logger('INFO--variations/c_get_crm_variations-- woo_variation_picture_name: '.$woo_variation_picture_name.', $currentVariationObject[image][name]= '.$currentVariationObject['image']['name']); 
                                         if($woo_variation_picture_name == $currentVariationObject['image']['name']){
                                             unset($currentVariationObject['image']);
                                         }
@@ -218,6 +221,10 @@
             logger ('The Response: '.print_r($e->getResponse(), true));
             update_option( 'is_sync_task_executed', 'false', 'yes' );
         } catch (Exception $e) {
+            echo 'Exception: ',  $e->getMessage(), "\n";
+            logger ('ERROR--variations/c_get_crm_variations-- The response: '.$e->getMessage());
+            update_option( 'is_sync_task_executed', 'false', 'yes' );
+        } catch(Throwable $e){
             echo 'Exception: ',  $e->getMessage(), "\n";
             logger ('ERROR--variations/c_get_crm_variations-- The response: '.$e->getMessage());
             update_option( 'is_sync_task_executed', 'false', 'yes' );

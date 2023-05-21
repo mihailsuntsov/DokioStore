@@ -262,6 +262,10 @@
             echo 'Exception: ',  $e->getMessage(), "\n";
             logger ('ERROR--categories/c_get_crm_categories-- The response: '.$e->getMessage());
             update_option( 'is_sync_task_executed', 'false', 'yes' );
+        } catch(Throwable $e){
+            echo 'Exception: ',  $e->getMessage(), "\n";
+            logger ('ERROR--categories/c_get_crm_categories-- The response: '.$e->getMessage());
+            update_option( 'is_sync_task_executed', 'false', 'yes' );
         }
     }
     
@@ -273,9 +277,7 @@
 
 
     function isPictureInWoo($arr, $woo_id, $name){
-        // echo("Search image... <br>");
         foreach ($arr as $e ) {
-            // echo("e->id = ".$e->id.", woo_id = ".$woo_id.", e->name = ".$e->name.", name = ". $name . "<br>");
             if($e->id == $woo_id && $e->name == $name) return true;
         }
         return false;

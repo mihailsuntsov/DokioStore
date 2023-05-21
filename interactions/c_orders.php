@@ -33,6 +33,8 @@
                 echo('<b>New non-synchronised orders: </b><br><pre>');
                 print_r ($orders);
                 echo('</pre><br>');
+                logger ('INFO--products/c_get_crm_products-- Orders: '.json_encode($orders));
+
 
                 if(count($orders)>0){
                     $data_to_sent = '{"crmSecretKey":"'.get_option( 'secret_key' ).'","orders":'.json_encode($orders).'}';
@@ -85,6 +87,10 @@
             logger ('The Response: '.print_r($e->getResponse(), true));
             update_option( 'is_sync_task_executed', 'false', 'yes' );
         } catch (Exception $e) {
+            echo 'Exception: ',  $e->getMessage(), "\n";
+            logger ('ERROR--orders/c_get_crm_orders-- The response: '.$e->getMessage());
+            update_option( 'is_sync_task_executed', 'false', 'yes' );
+        } catch(Throwable $e){
             echo 'Exception: ',  $e->getMessage(), "\n";
             logger ('ERROR--orders/c_get_crm_orders-- The response: '.$e->getMessage());
             update_option( 'is_sync_task_executed', 'false', 'yes' );

@@ -307,6 +307,10 @@
             echo 'Exception: ',  $e->getMessage(), "\n";
             logger ('ERROR--products/c_get_crm_products-- The response: '.$e->getMessage());
             update_option( 'is_sync_task_executed', 'false', 'yes' );
+        } catch(Throwable $e){
+            echo 'Exception: ',  $e->getMessage(), "\n";
+            logger ('ERROR--products/c_get_crm_products-- The response: '.$e->getMessage());
+            update_option( 'is_sync_task_executed', 'false', 'yes' );
         }
     }
     

@@ -122,12 +122,12 @@
         if(get_option( 'is_sync_task_executed' ) == 'false'){
           update_option( 'is_sync_task_executed', 'true', 'yes' );
           logger('INFO >>>>>>>>>>>>    STARTING NEW SYNCHRONIZATION CYCLE     >>>>>>>>>>>>');
-          //c_get_crm_categories();
-          //c_get_crm_attributes();
-          //c_get_crm_terms();
+          c_get_crm_categories();
+          c_get_crm_attributes();
+          c_get_crm_terms();
           c_get_crm_products();
           c_get_crm_variations();
-        //   c_get_crm_orders();
+          c_get_crm_orders();
           logger('INFO <<<<<<<<<<<<    FINISHING SYNCHRONIZATION CYCLE     <<<<<<<<<<<<');
           update_option( 'is_sync_task_executed', 'false', 'yes' );
         } else {
