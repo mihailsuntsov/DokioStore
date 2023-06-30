@@ -127,7 +127,7 @@
                                     <?php echo(task_works('dokiocrm_products_cronjob')?'green':'red');?>;">
                                 </div>
                             </td>
-                            <td style="border: 0px solid;"><span style = "line-height: 47px;">Categories, attributes, products and orders</span></td>
+                            <td style="border: 0px solid;"><span style = "line-height: 47px;">Categories, attributes and products</span></td>
                             <td class="col-2" style = "text-align: center; border: 0px solid;">
                                 <form 
                                 style = "display:<?php echo(task_works('dokiocrm_products_cronjob')?'none':'block');?>"
@@ -148,6 +148,36 @@
                             </td>
                         </tr>
                         
+                        <tr>
+                            <td class="col-1" style = "text-align: center; border: 0px solid;">
+                                <div style="width: 24px;
+                                    height: 24px;
+                                    margin: 12px auto;
+                                    border-radius: 12px;
+                                    background: 
+                                    <?php echo(task_works('dokiocrm_orders_cronjob')?'green':'red');?>;">
+                                </div>
+                            </td>
+                            <td style="border: 0px solid;"><span style = "line-height: 47px;">Orders</span></td>
+                            <td class="col-2" style = "text-align: center; border: 0px solid;">
+                                <form 
+                                style = "display:<?php echo(task_works('dokiocrm_orders_cronjob')?'none':'block');?>"
+                                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
+                                    method="post">
+                                    <input type="hidden" name="action" value="turn_on_cron_orders">
+                                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
+                                    <button type="submit" class="btn btn-primary">Start</button>
+                                </form>
+                                <form 
+                                    style = "display:<?php echo(task_works('dokiocrm_orders_cronjob')?'block':'none');?>"
+                                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
+                                    method="post">
+                                    <input type="hidden" name="action" value="turn_off_cron_orders">
+                                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
+                                    <button type="submit" class="btn btn-primary">Stop</button>
+                                </form>    
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 
