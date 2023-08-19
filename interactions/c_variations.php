@@ -101,12 +101,20 @@
                                                 'manage_stock' => $crm_variation->manage_stock, 
                                                 'backorders' => $crm_variation->backorders, 
                                                 'menu_order' => $crm_variation->menu_order, 
-                                                'image' => [
-                                                    'src'   => ($crm_variation->image->img_address == NULL)?'':$crm_variation->image->img_address,
-                                                    'name'  => ($crm_variation->image->img_address == NULL)?'':$crm_variation->image->img_original_name,
-                                                    'alt'   => ($crm_variation->image->img_address == NULL)?'':$crm_variation->image->img_alt                   
-                                                ]
                                             );
+                                            if($crm_variation->image->img_address != NULL && $crm_variation->image->img_address != ''){
+                                                $currentVariationObject['image'] = [
+                                                    'src'   => $crm_variation->image->img_address,
+                                                    'name'  => $crm_variation->image->img_original_name,
+                                                    'alt'   => $crm_variation->image->img_alt              
+                                                ];
+                                            } else {
+                                            //Deleting the image from a product variation. This is done by sending only { id: 0 } as the value for the variation image.
+                                                $currentVariationObject['image'] = [
+                                                    'id'   => 0
+                                                ];
+                                            }
+
                                             if($crm_variation->woo_id == NULL) {
                                                 echo '$crm_variation->woo_id is null<br>';
                                                 logger('INFO--variations/c_get_crm_variations-- There is no woo_id of current variation with crm_id = '.$crm_variation->crm_id.', then this variation is not in the WooCommerce');

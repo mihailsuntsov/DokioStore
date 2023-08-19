@@ -110,7 +110,7 @@ class Dokio_Store_Admin {
 	 * @since    1.0.0
 	 */
 	public function admin_menu(){
-		add_menu_page('DokioStore Settings','DokioStore','manage_options','dokiostore/ds-mainsettings.php',array($this, 'plugin_admin_page'),'dashicons-tickets', 250 );
+		add_menu_page('DokioStore Settings','DokioStore','manage_options','dokiostore/ds-mainsettings.php',array($this, 'plugin_admin_page'),'dashicons-editor-table', 250 );
 		// add_submenu_page('dokiostore/ds-mainsettings.php','My Sub level menu example','Sub Level Menu','manage_options','dokiostore/ds-importer.php', array($this, 'plugin_admin_sub_page'), 1 );
 	}
 	

@@ -33,10 +33,4 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 
 == Changelog ==
 
-= 1.2.1 =
-* Some text
-* Some text
-
-= 1.2.0 =
-* Some text
 

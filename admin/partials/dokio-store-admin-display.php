@@ -34,12 +34,12 @@
                     do_settings_sections( 'ds_custom_settitgs' )
                     ?>
                     <div class="form-group">
-                        <label for="API_address">DokioCRM API address</label>
-                        <input name="API_address" value="<?php echo get_option( 'API_address' ); ?>" type="text" class="form-control" id="API_address" placeholder="DokioCRM API address">
+                        <label for="API_address">CRM API address</label>
+                        <input name="API_address" value="<?php echo get_option( 'API_address' ); ?>" type="text" class="form-control" id="API_address" placeholder="CRM API address">
                     </div>
                     <div class="form-group">
-                        <label for="secret_key">DokioCRM Secret key</label>
-                        <input type="text" name="secret_key" value="<?php echo get_option( 'secret_key' ); ?>" class="form-control" id="secret_key" placeholder="DokioCRM Secret key">
+                        <label for="secret_key">CRM Secret key</label>
+                        <input type="text" name="secret_key" value="<?php echo get_option( 'secret_key' ); ?>" class="form-control" id="secret_key" placeholder="CRM Secret key">
                     </div>
                     <!-- <div class="form-group">
                         <label for="woo_address">Woocommerce store site address</label>
@@ -89,7 +89,7 @@
                         " class="form-control" rows="12"><?php echo get_option( 'annasta_filter_value' ); ?></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Save</button>
-                    <button type="button" class="btn btn-primary" id="test_crm_connection">Test connection to DokioCRM</button>
+                    <button type="button" class="btn btn-primary" id="test_crm_connection">Test connection to CRM</button>
                     <button type="button" class="btn btn-primary" id="test_woo_connection">Test connection to WooCommerce</button>
                 </form>
             </div>
@@ -119,7 +119,8 @@
                     <tbody style = "font-size: 24px;">
                         <tr>
                             <td class="col-1" style = "text-align: center; border: 0px solid;">
-                                <div style="width: 24px;
+                                <div id="task_products_circle"
+                                    style="width: 24px;
                                     height: 24px;
                                     margin: 12px auto;
                                     border-radius: 12px;
@@ -129,28 +130,16 @@
                             </td>
                             <td style="border: 0px solid;"><span style = "line-height: 47px;">Categories, attributes and products</span></td>
                             <td class="col-2" style = "text-align: center; border: 0px solid;">
-                                <form 
-                                style = "display:<?php echo(task_works('dokiocrm_products_cronjob')?'none':'block');?>"
-                                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
-                                    method="post">
-                                    <input type="hidden" name="action" value="turn_on_cron_products">
-                                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                                    <button type="submit" class="btn btn-primary">Start</button>
-                                </form>
-                                <form 
-                                    style = "display:<?php echo(task_works('dokiocrm_products_cronjob')?'block':'none');?>"
-                                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
-                                    method="post">
-                                    <input type="hidden" name="action" value="turn_off_cron_products">
-                                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                                    <button type="submit" class="btn btn-primary">Stop</button>
-                                </form>    
+                                <div>
+                                    <button type="submit" class="btn btn-primary" id="cron_products_btn"><?php echo(task_works('dokiocrm_products_cronjob')?'Stop':'Start');?></button>
+                                </div>
                             </td>
                         </tr>
                         
                         <tr>
                             <td class="col-1" style = "text-align: center; border: 0px solid;">
-                                <div style="width: 24px;
+                                <div  id="task_orders_circle"
+                                style="width: 24px;
                                     height: 24px;
                                     margin: 12px auto;
                                     border-radius: 12px;
@@ -160,22 +149,9 @@
                             </td>
                             <td style="border: 0px solid;"><span style = "line-height: 47px;">Orders</span></td>
                             <td class="col-2" style = "text-align: center; border: 0px solid;">
-                                <form 
-                                style = "display:<?php echo(task_works('dokiocrm_orders_cronjob')?'none':'block');?>"
-                                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
-                                    method="post">
-                                    <input type="hidden" name="action" value="turn_on_cron_orders">
-                                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                                    <button type="submit" class="btn btn-primary">Start</button>
-                                </form>
-                                <form 
-                                    style = "display:<?php echo(task_works('dokiocrm_orders_cronjob')?'block':'none');?>"
-                                    action="<?php echo get_option( 'siteurl' ); ?>/wp-admin/admin-post.php" 
-                                    method="post">
-                                    <input type="hidden" name="action" value="turn_off_cron_orders">
-                                    <input type="hidden" name="backpage" value="<?php echo($curr_url); ?>">
-                                    <button type="submit" class="btn btn-primary">Stop</button>
-                                </form>    
+                                <div>
+                                    <button type="submit" class="btn btn-primary" id="cron_orders_btn"><?php echo(task_works('dokiocrm_orders_cronjob')?'Stop':'Start');?></button>
+                                </div>
                             </td>
                         </tr>
                     </tbody>
